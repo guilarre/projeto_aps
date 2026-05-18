@@ -1,3 +1,3 @@
-./*.json
-./aps/*.json
-./aps/target/*.json
+*.json
+aps/*.json
+aps/target/*.json
