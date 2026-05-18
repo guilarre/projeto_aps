@@ -2,7 +2,7 @@
 Projeto da disciplina de Análise e Projeto de Software
 
 Pra rodar:
-- Abre um terminal e clona o repositório:
+- Abra um terminal e clone o repositório:
 `git clone https://github.com/guilarre/projeto_aps.git`
 
 - Verifique se vc tem o Java 17 (ou uma versão superior) instalado:
