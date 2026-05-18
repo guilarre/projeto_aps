@@ -1,0 +1,13 @@
+[
+  {
+    "idCliente": 1,
+    "nome": "gui",
+    "cpf": "12312312311",
+    "telefone": "81999999999",
+    "email": "gui@gui",
+    "preferenciaComunicacao": "email",
+    "endereco": "asdasd",
+    "aniversario": "12/12/2020",
+    "genero": "m"
+  }
+]
