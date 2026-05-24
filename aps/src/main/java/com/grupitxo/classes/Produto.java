@@ -169,7 +169,7 @@ Selecione a categoria do produto:
 		Produto produto = null;
 		Scanner sc = new Scanner(System.in);
 		// Prompts
-		System.out.println(Menu.menuSelecionarProduto);
+		System.out.println(StringsMenu.menuSelecionarProduto);
 		int opcao = sc.nextInt();
 		switch (opcao) {
 			case 1:

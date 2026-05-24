@@ -61,6 +61,6 @@ Escolha o cargo do funcionário:
         System.out.println("Funcionário criado em memória com sucesso!");
         
         // Retorna o objeto limpo. Ele não é salvo no banco AQUI. Isso é papel do Controller.
-        return new Funcionario(nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario, false);
+        return new Funcionario(nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario);
     }
 }

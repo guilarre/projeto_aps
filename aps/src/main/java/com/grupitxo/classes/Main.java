@@ -17,14 +17,14 @@ public class Main {
 		// Menu principal
 		Scanner sc = new Scanner(System.in);
 		loopMain: while (true) {
-			System.out.println(Menu.menuPrincipal);
+			System.out.println(StringsMenu.menuPrincipal);
 			int opcao = sc.nextInt();
 			switch (opcao) {
 				// Menu clientes
 				case 1:
 					Cliente cliente = null;
 					loopCliente: while (true) {
-						System.out.println(Menu.menuClientes);
+						System.out.println(StringsMenu.menuClientes);
 						opcao = sc.nextInt();
 						switch (opcao) {
 							// Exibir todos os clientes
@@ -59,7 +59,7 @@ public class Main {
 								Cliente clienteAModificar = Cliente.selecionarCliente();
 								if (clienteAModificar != null) {
 									loopModificarCliente: while (true) {
-										System.out.println(Menu.menuModificarCliente);
+										System.out.println(StringsMenu.menuModificarCliente);
 										opcao = sc.nextInt();
 										switch (opcao) {
 											case 1:
@@ -175,7 +175,7 @@ Cliente modificado com sucesso:
 				case 2:
 					Funcionario funcionario = null;
 					loopFuncionario: while (true) {
-						System.out.println(Menu.menuFuncionarios);
+						System.out.println(StringsMenu.menuFuncionarios);
 						opcao = sc.nextInt();
 						switch (opcao) {
 						// Exibir todos os funcionários
@@ -210,7 +210,7 @@ Cliente modificado com sucesso:
 							Funcionario funcionarioAModificar = Funcionario.selecionarFuncionario();
 							if (funcionarioAModificar != null) {
 								loopModificarFuncionario: while (true) {
-									System.out.println(Menu.menuModificarFuncionario);
+									System.out.println(StringsMenu.menuModificarFuncionario);
 									opcao = sc.nextInt();
 									switch (opcao) {
 										case 1:
@@ -345,7 +345,7 @@ Funcionario modificado com sucesso:
 				// Menu estoque
 				case 3:
 					loopEstoque: while (true) {
-						System.out.println(Menu.menuEstoque);
+						System.out.println(StringsMenu.menuEstoque);
 						opcao = sc.nextInt();
 						switch (opcao) {
 							// Pesquisar um produto em estoque
@@ -374,7 +374,7 @@ Categorias disponíveis
 							// Gerenciar estoque
 							case 4:
 								loopGerenciarEstoque: while (true) {
-									System.out.println(Menu.menuGerenciarEstoque);
+									System.out.println(StringsMenu.menuGerenciarEstoque);
 									opcao = sc.nextInt();
 									switch (opcao) {
 										// Adicionar produto novo ao estoque
@@ -395,7 +395,7 @@ Produto adicionado com sucesso:
 											Produto produtoAModificar = Produto.selecionarProduto();
 											if (produtoAModificar != null) {
 												loopModificarProduto: while (true) {
-													System.out.println(Menu.menuModificarProduto);
+													System.out.println(StringsMenu.menuModificarProduto);
 													opcao = sc.nextInt();
 													switch (opcao) {
 														case 1:
@@ -500,7 +500,7 @@ Produto modificado com sucesso:
 				// Menu vendas
 				case 4:
 					loopMenuVendas: while (true) {
-						System.out.println(Menu.menuVendas);
+						System.out.println(StringsMenu.menuVendas);
 						boolean vendaSucesso = false;
 						boolean pesquisaSucesso = false;
 						boolean cancelamentoSucesso = false;

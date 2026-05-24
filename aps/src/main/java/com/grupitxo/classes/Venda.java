@@ -27,7 +27,7 @@ public class Venda {
 		int opcao;
 		// Prompts
 		loopPesquisarVendas: while (true) {
-			System.out.println(Menu.menuPesquisarVendas);
+			System.out.println(StringsMenu.menuPesquisarVendas);
 			opcao = sc.nextInt();
 			switch (opcao) {
 				// Pesquisar por cliente

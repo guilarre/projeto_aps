@@ -1,6 +1,6 @@
 package com.grupitxo.classes;
 
-public class Menu {
+public class StringsMenu {
 	public static String menuPrincipal = """
 ###### Sistema de gerenciamento LaSca ######
 
