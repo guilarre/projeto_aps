@@ -13,7 +13,7 @@ public class FuncionarioDbAdapter {
     }
 
     public boolean salvar(Funcionario f) {
-        String sql = "INSERT INTO funcionario (nome, cpf, telefone, email, preferencia_comunicacao, endereco, aniversario, genero, cargo, salario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO funcionarios (nome, cpf, telefone, email, preferencia_comunicacao, endereco, aniversario, genero, cargo, salario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, f.getNome());
@@ -36,7 +36,7 @@ public class FuncionarioDbAdapter {
     }
 
     public int getQtd() {
-        String sql = "SELECT COUNT(*) FROM funcionario;";
+        String sql = "SELECT COUNT(*) FROM funcionarios;";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {

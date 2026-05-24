@@ -21,7 +21,7 @@ public class DatabaseConfig {
     }
 
     public static void inicializarBanco() {
-        String sqlFuncionario = "CREATE TABLE IF NOT EXISTS funcionario (" +
+        String sqlFuncionario = "CREATE TABLE IF NOT EXISTS funcionarios (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 "nome TEXT NOT NULL, " +
                                 "cpf TEXT NOT NULL, " +
@@ -35,10 +35,21 @@ public class DatabaseConfig {
                                 "salario REAL NOT NULL" +
                                 ");";
 
+        String sqlProduto = "CREATE TABLE IF NOT EXISTS produtos (" +
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "sku TEXT NOT NULL, " +
+                            "nome_produto TEXT NOT NULL, " +
+                            "descricao TEXT NOT NULL, " +
+                            "valor REAL NOT NULL, " +
+                            "categoria TEXT NOT NULL, " +
+                            "qtd_estoque INTEGER NOT NULL" +
+                            ");";
+
         try (Connection conn = getConnection();
             Statement stmt = conn.createStatement()) {
                 
             stmt.execute(sqlFuncionario);
+            stmt.execute(sqlProduto);
 
             System.out.println("Banco de dados e tabelas inicializadas com sucesso!");
         } catch (SQLException e) {
