@@ -89,7 +89,7 @@ public class Cliente extends Pessoa {
 		Cliente cliente = null;
 		Scanner sc = new Scanner(System.in);
 		// Prompts
-		System.out.println(Menu.menuSelecionarCliente);
+		System.out.println(StringsMenu.menuSelecionarCliente);
 		int opcao = sc.nextInt();
 		switch (opcao) {
 			case 1:
