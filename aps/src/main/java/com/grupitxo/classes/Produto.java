@@ -25,7 +25,7 @@ public class Produto {
 		this.valor = valor;
 		this.categoria = categoria;
 		this.qtdEstoque = qtdEstoque;
-		if (autoAdd) {			
+		if (autoAdd) { //
 			listaProdutos.add(this);
 		}
 	}
@@ -64,6 +64,7 @@ public class Produto {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
+	// CHECK: talvez dê pra tirar isso e usar getCategoria().toString
 	public static String getCategoriaValue(Categoria categoria) {
 		switch (categoria) {
 			case CALCA:

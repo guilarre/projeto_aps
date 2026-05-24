@@ -35,6 +35,7 @@ public class Funcionario extends Pessoa {
 	public void setCargo(Cargo cargo) {
 		this.cargo = cargo;
 	}
+	// CHECK: precisa disso? pode só chamar getCargo().toString()
 	public static String getCargoValue(Cargo cargo) {
 		switch (cargo) {
 			case VENDEDOR:
