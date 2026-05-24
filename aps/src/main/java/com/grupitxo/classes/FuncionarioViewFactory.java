@@ -1,6 +1,7 @@
 package com.grupitxo.classes;
 
 import java.util.Scanner;
+
 import com.grupitxo.enums.Cargo;
 
 public class FuncionarioViewFactory {
@@ -61,6 +62,13 @@ Escolha o cargo do funcionário:
         System.out.println("Funcionário criado em memória com sucesso!");
         
         // Retorna o objeto limpo. Ele não é salvo no banco AQUI. Isso é papel do Controller.
-        return new Funcionario(nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario);
+        try {
+            Funcionario funcionario = new Funcionario(nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario);
+            System.out.println("Funcionário criado em memória com sucesso!");
+            return funcionario;
+        } catch (IllegalArgumentException e) { //Captura o erro do construtor (ex: Cargo nulo, CPF inválido, etc)
+            System.err.println("ERRO ao criar funcionário: " + e.getMessage());
+            return null; 
+        }
     }
 }

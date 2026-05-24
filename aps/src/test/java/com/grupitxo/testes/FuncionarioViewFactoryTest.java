@@ -1,4 +1,4 @@
-package com.grupitxo;
+package com.grupitxo.testes;
 
 // imports pro junit e scanner
 import org.junit.Test;

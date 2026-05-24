@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.grupitxo.enums.Cargo;
 
@@ -41,6 +43,41 @@ public class FuncionarioDbAdapter implements FuncionarioStorageStrategy {
     }
     
     // READ
+    @Override
+    public List<Funcionario> buscarTodos() {
+        List<Funcionario> listaFuncionarios = new ArrayList<>();
+        String sql = "SELECT * FROM funcionarios;";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            // O while vai rodar enquanto tiverem linhas na tabela
+            while (rs.next()) {
+                int idDb = rs.getInt("id");
+                String nome = rs.getString("nome");
+                String cpf = rs.getString("cpf");
+                String telefone = rs.getString("telefone");
+                String email = rs.getString("email");
+                String preferenciaComunicacao = rs.getString("preferencia_comunicacao");
+                String endereco = rs.getString("endereco");
+                String aniversario = rs.getString("aniversario");
+                String genero = rs.getString("genero");
+                Cargo cargo = Cargo.valueOf(rs.getString("cargo"));
+                double salario = rs.getDouble("salario");
+
+                Funcionario f = new Funcionario(
+                    idDb, nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario
+                );
+                
+                listaFuncionarios.add(f); // Adiciona na lista temporária
+            }
+        } catch (SQLException e) {
+            System.err.println("ERRO! Não foi possível buscar todos os funcionários: " + e.getMessage());
+        }
+
+        return listaFuncionarios; // Retorna a lista (pode estar vazia, mas não nula) 
+    }
+    
     @Override
     public Funcionario buscarPorId(int id) {
         String sql = "SELECT * FROM funcionarios WHERE id == ?;";

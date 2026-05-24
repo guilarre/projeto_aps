@@ -1,4 +1,4 @@
-package com.grupitxo;
+package com.grupitxo.testes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
