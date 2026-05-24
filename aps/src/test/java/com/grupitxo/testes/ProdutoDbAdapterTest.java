@@ -1,4 +1,4 @@
-package com.grupitxo;
+package com.grupitxo.testes;
 
 //imports pro junit (framework de teste) e jdbc (pro sqlite)
 import org.junit.Before;
