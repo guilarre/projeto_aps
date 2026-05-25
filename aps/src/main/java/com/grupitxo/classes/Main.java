@@ -1,21 +1,47 @@
 package com.grupitxo.classes;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		// instanciando os view/controller/adapter pra funcionário:
+		FuncionarioStorageStrategy adapter = null;
+        FuncionarioView view = null;
+        FuncionarioViewFactory factory = null; 
+        FuncionarioController funcionarioController = null;
+        Venda moduloVenda = null;
+		
+		try {
+            // Instanciando as dependências (Adapter, View, Factory)
+            adapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());
+            view = new FuncionarioView();
+            factory = new FuncionarioViewFactory(); 
+
+			funcionarioController = new FuncionarioController(view, factory, adapter);
+
+            // Instanciando a classe Venda e INJETANDO o controller
+            moduloVenda = new Venda(funcionarioController);
+
+        } catch (SQLException e) {
+            System.err.println("Falha crítica: Não foi possível conectar ao banco de dados ao iniciar o sistema.");
+            e.printStackTrace();
+        }
+
+		// se der certo, vai inicializar o BD:
+		DatabaseConfig.inicializarBanco();
+
 		// Carregar arquivos em memória
 		try {			
 			JsonReader.carregarClientes();
-			JsonReader.carregarFuncionarios();
 			JsonReader.carregarEstoque();
 			JsonReader.carregarHistorico();
 		} catch (NullPointerException e) {
 		}
 		
 		// Menu principal
-		Scanner sc = new Scanner(System.in);
 		loopMain: while (true) {
 			System.out.println(StringsMenu.menuPrincipal);
 			int opcao = sc.nextInt();
@@ -172,6 +198,7 @@ Cliente modificado com sucesso:
 					}
 					break;
 				// Menu funcionários
+				// NOTE: exemplo do que foi mudado após refatoração
 				case 2:
 					Funcionario funcionario = null;
 					loopFuncionario: while (true) {
@@ -180,20 +207,20 @@ Cliente modificado com sucesso:
 						switch (opcao) {
 						// Exibir todos os funcionários
 						case 1:
-							System.out.println(Funcionario.getFuncionarios());
+							funcionarioController.rotinaListarFuncionarios();
 							break;
 						// Exibir informações de um funcionário
 						case 2:
-							funcionario = Funcionario.selecionarFuncionario();
+							funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);
 							if (funcionario != null) {
-								System.out.println(funcionario.toString());
+								view.exibirFuncionario(funcionario);
 							} else {
 								System.out.println("Operação cancelada");
 							}
 							break;
 						// Exibir histórico de vendas de um funcionário
 						case 3:
-							funcionario = Funcionario.selecionarFuncionario();
+							funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);
 							if (funcionario != null) {
 								System.out.println(Historico.getHistoricoFuncionario(funcionario.getIdFuncionario()));
 							} else {
@@ -202,136 +229,16 @@ Cliente modificado com sucesso:
 							break;
 						// Registrar um funcionário
 						case 4:
-							Funcionario.getFuncionarioNovo();
+							funcionarioController.rotinaCriarFuncionario(sc);
 							break;
 						// Modificar um funcionário
+						// NOTE: exemplo da maior mudança
 						case 5:
-							Funcionario funcionarioModificado = null;
-							Funcionario funcionarioAModificar = Funcionario.selecionarFuncionario();
-							if (funcionarioAModificar != null) {
-								loopModificarFuncionario: while (true) {
-									System.out.println(StringsMenu.menuModificarFuncionario);
-									opcao = sc.nextInt();
-									switch (opcao) {
-										case 1:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 2:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 3:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 4:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 5:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 6:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 7:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 8:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 9:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 10:
-											funcionarioModificado = Funcionario.modificarFuncionario(funcionarioAModificar, opcao);
-											if (funcionarioModificado == null) {
-												System.out.println("Modificação cancelada!");
-											}
-											System.out.println(String.format("""
-
-Funcionario modificado com sucesso:
-%s""", funcionarioModificado.toString()));
-											break;
-										case 0:
-											break loopModificarFuncionario;
-										default:
-											System.err.println("ERRO! Opção inválida");
-											break;
-									}
-								}
-							} else {
-								System.out.println("Operação cancelada");
-							}
+							funcionarioController.rotinaAtualizarFuncionario(sc);
 							break;
 						// Remover um funcionário
 						case 6:
-							Funcionario funcionarioARemover = Funcionario.selecionarFuncionario();
-							if (funcionarioARemover != null) {
-								Funcionario.removerFuncionario(funcionarioARemover);
-							} else {
-								System.out.println("Operação cancelada");
-							}
+							funcionarioController.rotinaRemoverFuncionario(sc);
 							break;
 						// Retornar ao menu principal
 						case 0:
@@ -508,7 +415,7 @@ Produto modificado com sucesso:
 						switch (opcao) {
 							// Realizar venda
 							case 1:
-								vendaSucesso = Venda.realizarVenda();
+								vendaSucesso = moduloVenda.realizarVenda(sc);
 								if (vendaSucesso) {
 									System.out.println("Venda registrada com sucesso!");
 									break;
@@ -517,14 +424,14 @@ Produto modificado com sucesso:
 								break;
 							// Pesquisar vendas
 							case 2:
-								pesquisaSucesso = Venda.pesquisarVendas();
+								pesquisaSucesso = moduloVenda.pesquisarVendas(sc);
 								if (pesquisaSucesso == false) {
 									System.out.println("A pesquisa falhou!");
 								}
 								break;
 							// Cancelar venda realizada
 							case 3:
-								cancelamentoSucesso = Venda.cancelarVenda();
+								cancelamentoSucesso = moduloVenda.cancelarVenda(sc);
 								if (cancelamentoSucesso == false) {
 									System.out.println("O cancelamento falhou!");
 								}
@@ -547,7 +454,6 @@ Produto modificado com sucesso:
 				case 0:
 					System.out.println("Até logo!");
 					JsonWriter.salvarClientes();
-					JsonWriter.salvarFuncionarios();
 					JsonWriter.salvarEstoque();
 					JsonWriter.salvarHistorico();
 					sc.close();

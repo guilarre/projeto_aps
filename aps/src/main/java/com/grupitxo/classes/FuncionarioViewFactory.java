@@ -7,7 +7,11 @@ import com.grupitxo.enums.Cargo;
 public class FuncionarioViewFactory {
     public Funcionario criarFuncionarioNovo(Scanner sc) {
         Cargo cargo = null;
-        // Prompts
+        // Limpa o buffer do Scanner (importante após ler nextInt ou nextDouble)
+        if (sc.hasNextLine()) {
+			sc.nextLine();
+        }
+		// Prompts
 		System.out.println("Digite o nome do funcionário: ");
 		String nome = sc.nextLine();
 		System.out.println("Digite o cpf do funcionário: ");

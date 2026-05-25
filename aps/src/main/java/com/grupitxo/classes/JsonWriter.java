@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 
 import com.grupitxo.typeadapter.ClienteTypeAdapter;
 import com.grupitxo.typeadapter.CompraTypeAdapter;
-import com.grupitxo.typeadapter.FuncionarioTypeAdapter;
 import com.grupitxo.typeadapter.HistoricoTypeAdapter;
 import com.grupitxo.typeadapter.ProdutoTypeAdapter;
 
@@ -18,7 +17,6 @@ public class JsonWriter {
 	private static Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
 			.registerTypeAdapter(Cliente.class, new ClienteTypeAdapter())
-			.registerTypeAdapter(Funcionario.class, new FuncionarioTypeAdapter())
 	        .registerTypeAdapter(Produto.class, new ProdutoTypeAdapter())
 			.registerTypeAdapter(Compra.class, new CompraTypeAdapter())
 			.registerTypeAdapter(new TypeToken<ArrayList<Compra>>(){}.getType(), 
@@ -39,12 +37,6 @@ public class JsonWriter {
 		ArrayList<Cliente> listaClientes = Cliente.getListaClientes();
 		String caminhoArquivo = "clientes.json";
 		JsonWriter.salvarEmArquivo(listaClientes, caminhoArquivo);
-	}
-	
-	public static void salvarFuncionarios() {
-		ArrayList<Funcionario> listaFuncionarios = Funcionario.getListaFuncionarios();
-		String caminhoArquivo = "funcionarios.json";
-		JsonWriter.salvarEmArquivo(listaFuncionarios, caminhoArquivo);
 	}
 	
 	public static void salvarEstoque() {
