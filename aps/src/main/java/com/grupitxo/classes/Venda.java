@@ -4,13 +4,21 @@ import java.util.Scanner;
 
 
 public class Venda {
+	// adaptações enquanto não termina a refatoração
+	private FuncionarioController funcionarioController;
+	
+	// Construtor pra Venda (vai deixar de ser tudo static pq precisa passar os view factory e adapter pela main)
+	public Venda(FuncionarioController funcionarioController) {
+		this.funcionarioController = funcionarioController;
+	}
+
 	// Métodos retornam true/false e Main gerencia mensagem de erro/sucesso
-	public static boolean realizarVenda() {
+	public boolean realizarVenda(Scanner sc) {
 		Cliente cliente = Cliente.selecionarCliente();
 		if (cliente == null) {
 			return false;
 		}
-		Funcionario funcionario = Funcionario.selecionarFuncionario();
+		Funcionario funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);
 		if (funcionario == null) {
 			return false;
 		}
@@ -21,9 +29,8 @@ public class Venda {
 		return false;
 	}
 	
-	public static boolean pesquisarVendas() {
+	public boolean pesquisarVendas(Scanner sc) {
 		// Setup
-		Scanner sc = new Scanner(System.in);
 		int opcao;
 		// Prompts
 		loopPesquisarVendas: while (true) {
@@ -41,7 +48,7 @@ public class Venda {
 					return true;
 				// Pesquisar por funcionário
 				case 2:
-					Funcionario funcionario = Funcionario.selecionarFuncionario();
+					Funcionario funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);
 					if (funcionario != null) {
 						System.out.println(Historico.getHistoricoFuncionario(funcionario.getIdFuncionario()));
 					} else {
@@ -68,9 +75,8 @@ public class Venda {
 		return false;
 	}
 	
-	public static boolean cancelarVenda() {
+	public boolean cancelarVenda(Scanner sc) {
 		// Pegar índice da compra a cancelar
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Digite o índice da venda que deseja cancelar: ");
 		int idx = sc.nextInt();
 		// Pegar compra a cancelar para confirmar

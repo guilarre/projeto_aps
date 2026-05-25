@@ -9,14 +9,12 @@ import com.google.gson.reflect.TypeToken;
 
 import com.grupitxo.typeadapter.ClienteTypeAdapter;
 import com.grupitxo.typeadapter.CompraTypeAdapter;
-import com.grupitxo.typeadapter.FuncionarioTypeAdapter;
 import com.grupitxo.typeadapter.HistoricoTypeAdapter;
 import com.grupitxo.typeadapter.ProdutoTypeAdapter;
 
 public class JsonReader {
 	private static Gson gson = new GsonBuilder()
 			.registerTypeAdapter(Cliente.class, new ClienteTypeAdapter())
-			.registerTypeAdapter(Funcionario.class, new FuncionarioTypeAdapter())
 	        .registerTypeAdapter(Produto.class, new ProdutoTypeAdapter())
 			.registerTypeAdapter(Compra.class, new CompraTypeAdapter())
 			.registerTypeAdapter(new TypeToken<ArrayList<Compra>>(){}.getType(), 
@@ -29,16 +27,6 @@ public class JsonReader {
 			Cliente[] clientes = gson.fromJson(fr, Cliente[].class);
 			for (Cliente cliente : clientes) {
 				Cliente.addToListaClientes(cliente);
-			}
-		} catch (IOException | JsonIOException e) {
-		}
-	}
-	
-	public static void carregarFuncionarios() {
-		try (FileReader fr = new FileReader("funcionarios.json")) {
-			Funcionario[] funcionarios = gson.fromJson(fr, Funcionario[].class);
-			for (Funcionario funcionario : funcionarios) {
-				Funcionario.addToListaFuncionarios(funcionario);
 			}
 		} catch (IOException | JsonIOException e) {
 		}
