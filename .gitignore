@@ -5,3 +5,4 @@ aps/target/*.json
 todo.txt
 
 aps/banco/*.db
+banco/*.db
