@@ -44,12 +44,25 @@ public class DatabaseConfig {
                             "categoria TEXT NOT NULL, " +
                             "qtd_estoque INTEGER NOT NULL" +
                             ");";
+        
+         String sqlCliente = "CREATE TABLE IF NOT EXISTS clientes (" +
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "nome TEXT NOT NULL, " +
+                            "cpf TEXT NOT NULL, " +
+                            "telefone TEXT NOT NULL, " +
+                            "email TEXT NOT NULL, " +
+                            "preferencia_comunicacao TEXT NOT NULL, " +
+                            "endereco TEXT NOT NULL, " +
+                            "aniversario TEXT NOT NULL, " +
+                            "genero TEXT NOT NULL" +
+                            ");";
 
         try (Connection conn = getConnection();
             Statement stmt = conn.createStatement()) {
                 
             stmt.execute(sqlFuncionario);
             stmt.execute(sqlProduto);
+            stmt.execute(sqlCliente);
 
             System.out.println("Banco de dados e tabelas inicializadas com sucesso!");
         } catch (SQLException e) {
