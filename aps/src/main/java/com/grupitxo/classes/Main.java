@@ -31,10 +31,8 @@ public class Main {
             clienteView = new ClienteView();
             clienteFactory = new ClienteViewFactory();
 			clienteController = new ClienteController(clienteView, clienteFactory, clienteAdapter);
-
             // Instanciando a classe Venda e INJETANDO o controller
             moduloVenda = new Venda(funcionarioController, clienteController);
-
         } catch (SQLException e) {
             System.err.println("Falha crítica: Não foi possível conectar ao banco de dados ao iniciar o sistema.");
             e.printStackTrace();

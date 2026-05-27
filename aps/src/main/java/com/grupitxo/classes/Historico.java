@@ -14,6 +14,7 @@ public class Historico {
 	static {
         try {
             funcionarioAdapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());
+            clienteAdapter = new ClienteDbAdapter(DatabaseConfig.getConnection());
         } catch (SQLException e) {
             System.err.println("Erro fatal: Não foi possível conectar ao banco de dados para os Funcionários.");
             e.printStackTrace();

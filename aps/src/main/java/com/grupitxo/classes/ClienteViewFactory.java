@@ -27,9 +27,9 @@ public class ClienteViewFactory {
 		String genero = sc.nextLine();
 
         // Limpa o buffer do Scanner (importante após ler nextInt ou nextDouble)
-        if (sc.hasNextLine()) {
-            sc.nextLine();
-        }
+        // if (sc.hasNextLine()) {
+        //     sc.nextLine();
+        // }
 
         System.out.println("Cliente criado em memória com sucesso!");
         
