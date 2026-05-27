@@ -6,15 +6,17 @@ import java.util.Scanner;
 public class Venda {
 	// adaptações enquanto não termina a refatoração
 	private FuncionarioController funcionarioController;
+	private ClienteController clienteController;
 	
 	// Construtor pra Venda (vai deixar de ser tudo static pq precisa passar os view factory e adapter pela main)
-	public Venda(FuncionarioController funcionarioController) {
+	public Venda(FuncionarioController funcionarioController, ClienteController clienteController) {
 		this.funcionarioController = funcionarioController;
+		this.clienteController = clienteController;
 	}
 
 	// Métodos retornam true/false e Main gerencia mensagem de erro/sucesso
 	public boolean realizarVenda(Scanner sc) {
-		Cliente cliente = Cliente.selecionarCliente();
+		Cliente cliente = clienteController.selecionarClienteParaAcao(sc);
 		if (cliente == null) {
 			return false;
 		}
@@ -39,7 +41,7 @@ public class Venda {
 			switch (opcao) {
 				// Pesquisar por cliente
 				case 1:
-					Cliente cliente = Cliente.selecionarCliente();
+					Cliente cliente = clienteController.selecionarClienteParaAcao(sc);
 					if (cliente != null) {
 						System.out.println(Historico.getHistoricoCliente(cliente.getIdCliente()));
 					} else {

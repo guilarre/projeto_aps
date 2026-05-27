@@ -8,22 +8,32 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		// instanciando os view/controller/adapter pra funcionário:
-		FuncionarioStorageStrategy adapter = null;
-        FuncionarioView view = null;
-        FuncionarioViewFactory factory = null; 
+		FuncionarioStorageStrategy funcionarioAdapter = null;
+        FuncionarioView funcionarioView = null;
+        FuncionarioViewFactory funcionarioFactory = null; 
         FuncionarioController funcionarioController = null;
+		// instanciando pra cliente:
+		ClienteStorageStrategy clienteAdapter = null;
+        ClienteView clienteView = null;
+        ClienteViewFactory clienteFactory = null; 
+        ClienteController clienteController = null;
+		// módulo de venda
         Venda moduloVenda = null;
 		
 		try {
-            // Instanciando as dependências (Adapter, View, Factory)
-            adapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());
-            view = new FuncionarioView();
-            factory = new FuncionarioViewFactory(); 
-
-			funcionarioController = new FuncionarioController(view, factory, adapter);
+            // Instanciando as dependências para funcionário (Adapter, View, Factory)
+            funcionarioAdapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());
+            funcionarioView = new FuncionarioView();
+            funcionarioFactory = new FuncionarioViewFactory(); 
+			funcionarioController = new FuncionarioController(funcionarioView, funcionarioFactory, funcionarioAdapter);
+            // Instanciando as dependências para cliente (Adapter, View, Factory)
+			clienteAdapter = new ClienteDbAdapter(DatabaseConfig.getConnection());
+            clienteView = new ClienteView();
+            clienteFactory = new ClienteViewFactory();
+			clienteController = new ClienteController(clienteView, clienteFactory, clienteAdapter);
 
             // Instanciando a classe Venda e INJETANDO o controller
-            moduloVenda = new Venda(funcionarioController);
+            moduloVenda = new Venda(funcionarioController, clienteController);
 
         } catch (SQLException e) {
             System.err.println("Falha crítica: Não foi possível conectar ao banco de dados ao iniciar o sistema.");
@@ -35,7 +45,6 @@ public class Main {
 
 		// Carregar arquivos em memória
 		try {			
-			JsonReader.carregarClientes();
 			JsonReader.carregarEstoque();
 			JsonReader.carregarHistorico();
 		} catch (NullPointerException e) {
@@ -47,6 +56,7 @@ public class Main {
 			int opcao = sc.nextInt();
 			switch (opcao) {
 				// Menu clientes
+				// NOTE: exemplo do que foi mudado após refatoração
 				case 1:
 					Cliente cliente = null;
 					loopCliente: while (true) {
@@ -55,20 +65,20 @@ public class Main {
 						switch (opcao) {
 							// Exibir todos os clientes
 							case 1:
-								System.out.println(Cliente.getClientes());
+								clienteController.rotinaListarClientes();
 								break;
 							// Exibir informações de um cliente
 							case 2:
-								cliente = Cliente.selecionarCliente();
+								cliente = clienteController.selecionarClienteParaAcao(sc);
 								if (cliente != null) {
-									System.out.println(cliente.toString());
+									clienteView.exibirCliente(cliente);
 								} else {
 									System.out.println("Operação cancelada");
 								}
 								break;
 							// Exibir histórico de compras de um cliente
 							case 3:
-								cliente = Cliente.selecionarCliente();
+								cliente = clienteController.selecionarClienteParaAcao(sc);
 								if (cliente != null) {
 									System.out.println(Historico.getHistoricoCliente(cliente.getIdCliente()));
 								} else {
@@ -77,69 +87,15 @@ public class Main {
 								break;
 							// Registrar um cliente
 							case 4:
-								Cliente.getClienteNovo();
+								clienteController.rotinaCriarCliente(sc);
 								break;
 							// Modificar um cliente
 							case 5:
-								Cliente clienteModificado = null;
-								Cliente clienteAModificar = Cliente.selecionarCliente();
-								if (clienteAModificar != null) {
-									loopModificarCliente: while (true) {
-										System.out.println(StringsMenu.menuModificarCliente);
-										opcao = sc.nextInt();
-										switch (opcao) {
-											case 1:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
-
-        try {
-            JsonReader.carregarClientes();
-            JsonReader.carregarFuncionarios();
-            JsonReader.carregarEstoque();
-            JsonReader.carregarHistorico();
-        } catch (NullPointerException e) {
-        }
-
-        Scanner sc = new Scanner(System.in);
-
-        ClienteView clienteView = new ClienteView();
-
-        loopMain: while (true) {
-
-            System.out.println(Menu.menuPrincipal);
-            int opcao = sc.nextInt();
-
-            switch (opcao) {
-
-                case 1:
-                    clienteView.menuClientes();
-                    break;
-
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 0:
-												break loopModificarCliente;
-											default:
-												System.err.println("ERRO! Opção inválida");
-												break;
-										}
-									}
-								} else {
-									System.out.println("Operação cancelada");
-								}
+								clienteController.rotinaAtualizarCliente(sc);
 								break;
 							// Remover um cliente
 							case 6:
-								Cliente clienteARemover = Cliente.selecionarCliente();
-								if (clienteARemover != null) {
-									Cliente.removerCliente(clienteARemover);
-								} else {
-									System.out.println("Operação cancelada");
-								}
+								clienteController.rotinaRemoverCliente(sc);
 								break;
 							// Retornar ao menu principal
 							case 0:
@@ -166,7 +122,7 @@ Cliente modificado com sucesso:
 						case 2:
 							funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);
 							if (funcionario != null) {
-								view.exibirFuncionario(funcionario);
+								funcionarioView.exibirFuncionario(funcionario);
 							} else {
 								System.out.println("Operação cancelada");
 							}
@@ -406,7 +362,6 @@ Produto modificado com sucesso:
 				// Sair do sistema
 				case 0:
 					System.out.println("Até logo!");
-					JsonWriter.salvarClientes();
 					JsonWriter.salvarEstoque();
 					JsonWriter.salvarHistorico();
 					sc.close();

@@ -103,7 +103,7 @@ public class FuncionarioDbAdapter implements FuncionarioStorageStrategy {
                     double salario = rs.getDouble("salario");
         
                     funcionarioEncontrado = new Funcionario(
-                        id, nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario
+                        idDb, nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero, cargo, salario
                     );
                 }
             }
