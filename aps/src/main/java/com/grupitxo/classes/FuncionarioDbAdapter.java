@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.grupitxo.enums.Cargo;
 
-// CRUD no BD
+// CRUD no BD pra Funcionario
 public class FuncionarioDbAdapter implements FuncionarioStorageStrategy {
     private Connection conn;
 

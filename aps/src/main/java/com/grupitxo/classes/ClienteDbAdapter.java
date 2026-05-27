@@ -124,6 +124,7 @@ public class ClienteDbAdapter implements ClienteStorageStrategy {
             stmt.setInt(9, c.getIdCliente());
 
             int linhasAfetadas = stmt.executeUpdate();
+
             if (linhasAfetadas > 0) {
                 return c;
             }
@@ -177,6 +178,6 @@ public class ClienteDbAdapter implements ClienteStorageStrategy {
         String aniv     = rs.getString("aniversario");
         String genero   = rs.getString("genero");
 
-        return new Cliente(idDb, nome, cpf, telefone, email, prefCom, endereco, aniv, genero, false);
+        return new Cliente(idDb, nome, cpf, telefone, email, prefCom, endereco, aniv, genero);
     }
 }

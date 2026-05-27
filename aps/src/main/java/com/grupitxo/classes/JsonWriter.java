@@ -3,7 +3,6 @@ package com.grupitxo.classes;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-import com.grupitxo.typeadapter.ClienteTypeAdapter;
 import com.grupitxo.typeadapter.CompraTypeAdapter;
 import com.grupitxo.typeadapter.HistoricoTypeAdapter;
 import com.grupitxo.typeadapter.ProdutoTypeAdapter;
@@ -16,7 +15,6 @@ public class JsonWriter {
 	// Criando objeto Gson com as opções abaixo
 	private static Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
-			.registerTypeAdapter(Cliente.class, new ClienteTypeAdapter())
 	        .registerTypeAdapter(Produto.class, new ProdutoTypeAdapter())
 			.registerTypeAdapter(Compra.class, new CompraTypeAdapter())
 			.registerTypeAdapter(new TypeToken<ArrayList<Compra>>(){}.getType(), 
@@ -33,12 +31,6 @@ public class JsonWriter {
 	}
 	
 	// Métodos específicos (chamados pelo main)
-	public static void salvarClientes() {
-		ArrayList<Cliente> listaClientes = Cliente.getListaClientes();
-		String caminhoArquivo = "clientes.json";
-		JsonWriter.salvarEmArquivo(listaClientes, caminhoArquivo);
-	}
-	
 	public static void salvarEstoque() {
 		ArrayList<Produto> estoque = Produto.getListaProdutos();
 		String caminhoArquivo = "estoque.json";

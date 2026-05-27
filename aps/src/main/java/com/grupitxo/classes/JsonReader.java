@@ -7,31 +7,19 @@ import java.util.ArrayList;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-import com.grupitxo.typeadapter.ClienteTypeAdapter;
 import com.grupitxo.typeadapter.CompraTypeAdapter;
 import com.grupitxo.typeadapter.HistoricoTypeAdapter;
 import com.grupitxo.typeadapter.ProdutoTypeAdapter;
 
 public class JsonReader {
 	private static Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Cliente.class, new ClienteTypeAdapter())
 	        .registerTypeAdapter(Produto.class, new ProdutoTypeAdapter())
 			.registerTypeAdapter(Compra.class, new CompraTypeAdapter())
 			.registerTypeAdapter(new TypeToken<ArrayList<Compra>>(){}.getType(), 
                     new HistoricoTypeAdapter(new CompraTypeAdapter()))
 			.create();
 	
-	// Métodos para carregar objetos em memória
-	public static void carregarClientes() {
-		try (FileReader fr = new FileReader("clientes.json")) {
-			Cliente[] clientes = gson.fromJson(fr, Cliente[].class);
-			for (Cliente cliente : clientes) {
-				Cliente.addToListaClientes(cliente);
-			}
-		} catch (IOException | JsonIOException e) {
-		}
-	}
-	
+	// Métodos para carregar objetos em memória	
 	public static void carregarHistorico() {
 		try (FileReader fr = new FileReader("historico.json")) {
 			Compra[] historico = gson.fromJson(fr, Compra[].class);
