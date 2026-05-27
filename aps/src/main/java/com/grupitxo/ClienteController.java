@@ -1,35 +1,44 @@
-import com.grupitxo.classes.Cliente;
+package com.grupitxo.classes;
 
 public class ClienteController {
 
-    private ClienteView view;
-    
-    public ClienteController(ClienteView view) {
-        this.view = view;
+    public String listarClientes() {
+        return Cliente.getClientes();
     }
 
-    public void cadastrarCliente() {
+    public Cliente selecionarCliente() {
+        return Cliente.selecionarCliente();
+    }
 
-        String nome = view.pedirNome();
-        String cpf = view.pedirCpf();
-        String telefone = view.pedirTelefone();
-        String email = view.pedirEmail();
-        String preferencia = view.pedirPreferencia();
-        String endereco = view.pedirEndereco();
-        String dataAniversario = view.pedirDataNiver();
-        String genero = view.pedirGenero();
+    public void criarCliente() {
+        Cliente.getClienteNovo();
+    }
 
-        Cliente cliente = new Cliente(
-            nome,
-            cpf,
-            telefone,
-            email,
-            preferencia,
-            endereco,
-            dataAniversario,
-            genero,
-            true
-        );
+    public void removerCliente() {
+        Cliente clienteARemover = Cliente.selecionarCliente();
 
-        view.mostrarMensagem("Cliente criado com sucesso!");    }
+        if (clienteARemover != null) {
+            Cliente.removerCliente(clienteARemover);
+        } else {
+            System.out.println("Operação cancelada");
+        }
+    }
+
+    public String verCliente(Cliente cliente) {
+        if (cliente != null) {
+            return cliente.toString();
+        }
+        return "Operação cancelada";
+    }
+
+    public String historicoCliente(Cliente cliente) {
+        if (cliente != null) {
+            return Historico.getHistoricoCliente(cliente.getIdCliente());
+        }
+        return "Operação cancelada!";
+    }
+
+    public Cliente modificarCliente(Cliente cliente, int opcao) {
+        return Cliente.modificarCliente(cliente, opcao);
+    }
 }
