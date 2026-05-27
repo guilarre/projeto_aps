@@ -95,75 +95,28 @@ public class Main {
 												}
 												System.out.println(String.format("""
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 2:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+        try {
+            JsonReader.carregarClientes();
+            JsonReader.carregarFuncionarios();
+            JsonReader.carregarEstoque();
+            JsonReader.carregarHistorico();
+        } catch (NullPointerException e) {
+        }
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 3:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+        Scanner sc = new Scanner(System.in);
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 4:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+        ClienteView clienteView = new ClienteView();
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 5:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+        loopMain: while (true) {
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 6:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+            System.out.println(Menu.menuPrincipal);
+            int opcao = sc.nextInt();
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 7:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+            switch (opcao) {
 
-Cliente modificado com sucesso:
-%s""", clienteModificado.toString()));
-												break;
-											case 8:
-												clienteModificado = Cliente.modificarCliente(clienteAModificar, opcao);
-												if (clienteModificado == null) {
-													System.out.println("Modificação cancelada!");
-												}
-												System.out.println(String.format("""
+                case 1:
+                    clienteView.menuClientes();
+                    break;
 
 Cliente modificado com sucesso:
 %s""", clienteModificado.toString()));
