@@ -1,4 +1,4 @@
-package com.grupitxo;
+package com.grupitxo.testes;
 
 //imports pro junit (framework de teste) e jdbc (pro sqlite)
 import org.junit.Before;
@@ -7,11 +7,11 @@ import static org.junit.Assert.*;
 import java.sql.Connection;
 //nossas classes
 import com.grupitxo.classes.DatabaseConfig;
-import com.grupitxo.classes.Funcionario;
-import com.grupitxo.classes.FuncionarioDbAdapter;
-import com.grupitxo.enums.Cargo;
+import com.grupitxo.classes.Produto;
+import com.grupitxo.classes.ProdutoDbAdapter;
+import com.grupitxo.enums.Categoria;
 
-public class FuncionarioDbAdapterTest {
+public class ProdutoDbAdapterTest {
     private Connection conn;
 
     @Before
@@ -23,18 +23,18 @@ public class FuncionarioDbAdapterTest {
     }
 
     @Test
-    public void salvarFuncionario() throws Exception {
-        // cria um obj adapter    
-        FuncionarioDbAdapter adapter = new FuncionarioDbAdapter(conn);
-        
+    public void salvarProduto() throws Exception {
+        // cria um obj adapter
+        ProdutoDbAdapter adapter = new ProdutoDbAdapter(conn);
+
         // qtd antes pra comparação
         int qtdAntes = adapter.getQtd();
 
         // cria um obj funcionario
-        Funcionario funcionarioNovo = new Funcionario("asdasd", "12312312311", "81999999999", "gui@gui", "email", "radsad", "20/07/1996", "masc", Cargo.CAIXA, 1231d, false);
-        
+        Produto produtoNovo = new Produto("00001", "Calça jeans", "calça jeans azul fem 40", 300.01, Categoria.CALCA, 50, false);
+
         // tenta salvar
-        boolean salvou = adapter.salvar(funcionarioNovo);
+        boolean salvou = adapter.salvar(produtoNovo);
 
         // verificação
         assertTrue(salvou);

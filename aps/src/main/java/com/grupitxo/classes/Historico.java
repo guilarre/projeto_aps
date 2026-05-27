@@ -1,12 +1,27 @@
 package com.grupitxo.classes;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import com.grupitxo.enums.Status;
 import com.grupitxo.classes.Compra.CompraProduto;
+import com.grupitxo.enums.Status;
 
 public class Historico {
+	// por enquanto tem que ser assim diretamente pelo histórico, mas futuramente seria tudo pelo controller
+	private static FuncionarioStorageStrategy funcionarioAdapter;
+	private static ClienteStorageStrategy clienteAdapter;
+	static {
+        try {
+            funcionarioAdapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());
+        } catch (SQLException e) {
+            System.err.println("Erro fatal: Não foi possível conectar ao banco de dados para os Funcionários.");
+            e.printStackTrace();
+            // Se der erro na conexão, o funcionarioAdapter ficará nulo, 
+            // então você já sabe que se estourar NullPointerException depois, foi o banco que não subiu.
+        }
+    }
+
 	private static ArrayList<Compra> historico = new ArrayList<Compra>();
 	
 	// CRUD
@@ -42,7 +57,7 @@ public class Historico {
 	public static String getHistoricoCliente(int idCliente) {
 		// Checar primeiro se idCliente existe
 		ArrayList<Integer> idsDisponiveis = new ArrayList<Integer>();
-		for (Cliente cliente : Cliente.getListaClientes()) {
+		for (Cliente cliente : clienteAdapter.buscarTodos()) {
 			idsDisponiveis.add(cliente.getIdCliente());
 		}
 		if (idsDisponiveis.contains(idCliente) == false) {
@@ -50,7 +65,7 @@ public class Historico {
 			return null;
 		}
 		// Existindo, pegar nome do cliente
-		String nomeCliente = Cliente.getClienteById(idCliente).getNome();
+		String nomeCliente = clienteAdapter.buscarPorId(idCliente).getNome();
 		// Pegar histórico do cliente
 		StringBuilder historicoCliente = new StringBuilder();
 		for (int i = 0; i < historico.size(); i++) {
@@ -72,7 +87,7 @@ Compras de %s (id do cliente: '%d'):
 	public static String getHistoricoFuncionario(int idFuncionario) {
 		// Checar primeiro se idFuncionario existe
 		ArrayList<Integer> idsDisponiveis = new ArrayList<Integer>(); 
-		for (Funcionario funcionario : Funcionario.getListaFuncionarios()) {
+		for (Funcionario funcionario : funcionarioAdapter.buscarTodos()) {
 			idsDisponiveis.add(funcionario.getIdFuncionario());
 		}
 		if (idsDisponiveis.contains(idFuncionario) == false) {
@@ -80,7 +95,7 @@ Compras de %s (id do cliente: '%d'):
 			return null;
 		}
 		// Existindo, pegar nome do cliente
-		String nomeFuncionario = Funcionario.getFuncionarioById(idFuncionario).getNome();
+		String nomeFuncionario = funcionarioAdapter.buscarPorId(idFuncionario).getNome();
 		// Pegar histórico do funcionário
 		StringBuilder historicoFuncionario = new StringBuilder();
 		for (int i = 0; i < historico.size(); i++) {
@@ -88,10 +103,10 @@ Compras de %s (id do cliente: '%d'):
 			if (compra.getIdFuncionario() == idFuncionario) {
 				historicoFuncionario.append(compra.toString());
 			}
-			if (historicoFuncionario.isEmpty()) {
-				System.out.println(String.format("ERRO! O funcionário de id '%d' ainda não possui vendas registradas", idFuncionario));
-				return null;
-			}
+		}
+		if (historicoFuncionario.isEmpty()) {
+			System.out.println(String.format("ERRO! O funcionário de id '%d' ainda não possui vendas registradas", idFuncionario));
+			return null;
 		}
 		return String.format("""
 				
