@@ -1,0 +1,28 @@
+sequenceDiagram
+    autonumber
+    actor Usuario as Usuário/Terminal
+    participant C as FuncionarioController
+    participant F as FuncionarioViewFactory
+    participant A as FuncionarioStorageStrategy
+
+    Usuario->>C: Invoca fluxo de criação
+    C->>F: criarFuncionarioNovo(scanner)
+    activate F
+    F->>Usuario: Prompts de inputs (Nome, CPF, Cargo, etc.)
+    Usuario-->>F: Digita dados brutos
+    
+    note over F: Tenta instanciar objeto<br/>new Funcionario(...)
+    
+    alt Sucesso (Dados Válidos)
+        F-->>C: Retorna instância de Funcionario
+        C->>A: salvar(novoFuncionario)
+        activate A
+        A->>A: Executa SQL (INSERT)
+        A-->>C: Retorna true (Sucesso no banco)
+        deactivate A
+        C->>Usuario: Exibe "Registrado com sucesso!"
+    else Falha (IllegalArgumentException disparada no Construtor)
+        F-->>C: Captura erro e retorna null
+        deactivate F
+        C->>Usuario: Exibe mensagem de erro e cancela cadastro
+    end

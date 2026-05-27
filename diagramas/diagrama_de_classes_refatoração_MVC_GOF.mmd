@@ -1,0 +1,110 @@
+classDiagram
+    direction T_B
+
+    %% Notas de Padrões de Projeto
+    note for FuncionarioController "Controller (MVC)"
+    note for FuncionarioView "View (MVC)"
+    note for FuncionarioViewFactory "Simple Factory (GoF)"
+    note for FuncionarioStorageStrategy "Strategy (GoF)"
+    note for FuncionarioDbAdapter "Adapter (GoF)"
+    note for FuncionarioDbAdapter "Model (MVC)"
+
+    %% Classes Principais
+    class Pessoa {
+        <<Abstract>>
+        -String nome
+        -String cpf
+        -String telefone
+        -String email
+        -String preferenciaComunicacao
+        -String endereco
+        -String aniversario
+        -String genero
+    }
+
+    class Funcionario {
+        -int idFuncionario
+        -Cargo cargo
+        -double salario
+        +Funcionario(int id, String nome, ...)
+        +Funcionario(String nome, String cpf, ...)
+        +getIdFuncionario() int
+        +getCargo() Cargo
+        +setCargo(Cargo cargo) void
+        +getSalario() double
+        +setSalario(double salario) void
+        +toString() String
+    }
+
+    class FuncionarioController {
+        -FuncionarioView view
+        -FuncionarioViewFactory factory
+        -FuncionarioStorageStrategy adapter
+        +FuncionarioController(FuncionarioView, FuncionarioViewFactory, FuncionarioStorageStrategy)
+        +selecionarFuncionarioParaAcao(Scanner) Funcionario
+        +rotinaListarFuncionarios() void
+        +rotinaCriarFuncionario(Scanner) void
+        +rotinaAtualizarFuncionario(Scanner) void
+        +rotinaRemoverFuncionario(Scanner) void
+    }
+
+    class FuncionarioView {
+        +exibirListaFuncionarios(List~Funcionario~) void
+        +exibirFuncionario(Funcionario) void
+        +mostrarMenuSelecao(Scanner) int
+        +pedirIdParaBusca(Scanner) int
+        +pedirNomeParaBusca(Scanner) String
+        +opcaoEdicao(Scanner) int
+        +pedirNovoDadoTexto(Scanner, String) String
+        +pedirNovoDadoDecimal(Scanner, String) double
+        +pedirNovoCargo(Scanner) int
+        +pedirConfirmacao(Scanner) int
+    }
+
+    class FuncionarioViewFactory {
+        +criarFuncionarioNovo(Scanner) Funcionario
+    }
+
+    class FuncionarioStorageStrategy {
+        <<Interface>>
+        +salvar(Funcionario) boolean
+        +buscarTodos() List~Funcionario~
+        +buscarPorId(int) Funcionario
+        +buscarPorNome(String) Funcionario
+        +atualizar(Funcionario) Funcionario
+        +remover(Funcionario) boolean
+        +getQtd() int
+    }
+
+    class FuncionarioDbAdapter {
+        -Connection conn
+        +FuncionarioDbAdapter(Connection)
+        +salvar(Funcionario) boolean
+        +buscarTodos() List~Funcionario~
+        +buscarPorId(int) Funcionario
+        +buscarPorNome(String) Funcionario
+        +atualizar(Funcionario) Funcionario
+        +remover(Funcionario) boolean
+        +getQtd() int
+    }
+
+    class Cargo {
+        <<Enumeration>>
+        VENDEDOR
+        CAIXA
+        ESTOQUISTA
+        SOCIO
+    }
+
+    %% Relacionamentos e Heranças
+    Pessoa <|-- Funcionario
+    Funcionario --> Cargo
+    FuncionarioStorageStrategy <|.. FuncionarioDbAdapter
+    
+    FuncionarioController --> FuncionarioView
+    FuncionarioController --> FuncionarioViewFactory
+    FuncionarioController --> FuncionarioStorageStrategy
+    
+    FuncionarioController ..> Funcionario : Gerencia Fluxo
+    FuncionarioViewFactory ..> Funcionario : Instancia
+    FuncionarioStorageStrategy ..> Funcionario : Persiste

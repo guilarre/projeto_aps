@@ -1,0 +1,38 @@
+sequenceDiagram
+    autonumber
+    actor Usuario as Usuário/Terminal
+    participant C as FuncionarioController
+    participant V as FuncionarioView
+    participant A as FuncionarioStorageStrategy
+    participant F as Funcionario (Objeto)
+
+    Usuario->>C: Invoca fluxo de atualização
+    
+    %% Bloco Interno Selecionar Funcionario
+    note over C, V: Sub-fluxo: selecionarFuncionarioParaAcao()
+    C->>V: mostrarMenuSelecao(scanner)
+    V-->>C: Retorna opção escolhida (Ex: 1 - ID)
+    C->>V: pedirIdParaBusca(scanner)
+    V-->>C: Retorna id digitado (Ex: 99)
+    C->>A: buscarPorId(99)
+    activate A
+    A->>A: Consulta ResultSet via JDBC
+    A-->>C: Retorna o objeto Funcionario alvo
+    deactivate A
+    
+    C->>V: exibirFuncionario(alvo)
+    C->>V: opcaoEdicao(scanner)
+    V-->>C: Retorna campo a mudar (Ex: 1 - Nome)
+    
+    C->>V: pedirNovoDadoTexto(scanner, "nome")
+    V-->>C: Retorna String "Novo Nome"
+    
+    C->>F: setNome("Novo Nome")
+    
+    C->>A: atualizar(alvo)
+    activate A
+    A->>A: Executa SQL (UPDATE)
+    A-->>C: Retorna instância atualizada do Funcionario
+    deactivate A
+    
+    C->>Usuario: Exibe "Funcionario atualizado com sucesso!"

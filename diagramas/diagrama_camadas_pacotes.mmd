@@ -1,0 +1,33 @@
+graph TD
+    subgraph Apresentacao ["Camada de Apresentação (UI)"]
+        V[FuncionarioView]
+        F[FuncionarioViewFactory]
+    end
+
+    subgraph Controle ["Camada de Controle (Orquestração)"]
+        C[FuncionarioController]
+    end
+
+    subgraph Dominio ["Camada de Domínio (Model)"]
+        M[Funcionario]
+        P[Pessoa]
+        E[Cargo Enum]
+    end
+
+    subgraph Persistencia ["Camada de Persistência (Infraestrutura)"]
+        S[[FuncionarioStorageStrategy]]
+        D[FuncionarioDbAdapter]
+    end
+
+    %% Relações de Uso (Linhas contínuas)
+    C --> V
+    C --> F
+    C --> S
+    
+    %% Relações de Criação/Implementação (Linhas pontilhadas com texto)
+    F -. Instancia .-> M
+    D -. Implementa .-> S
+    D -. Mapeia e Instancia .-> M
+    M -. Herda de .-> P
+
+    style S stroke-dasharray: 5 5
