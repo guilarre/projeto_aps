@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.grupitxo.testes.FuncionarioViewFactoryTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.079 s <<< FAILURE! - in com.grupitxo.testes.FuncionarioViewFactoryTest
+testeCriarFuncionarioViaConsole(com.grupitxo.testes.FuncionarioViewFactoryTest)  Time elapsed: 0.078 s  <<< ERROR!
+java.util.InputMismatchException
+	at com.grupitxo.testes.FuncionarioViewFactoryTest.testeCriarFuncionarioViaConsole(FuncionarioViewFactoryTest.java:36)
+
