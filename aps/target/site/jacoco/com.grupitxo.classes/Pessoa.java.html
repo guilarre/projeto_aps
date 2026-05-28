@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pessoa.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Pessoa.java</span></div><h1>Pessoa.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public abstract class Pessoa implements Validavel {
+	private String nome;
+	private String cpf;
+	private String telefone;
+	private String email;
+	private String preferenciaComunicacao;
+	private String endereco;
+	private String aniversario;
+	private String genero;
+	
+	// Construtor parametrizado (força subclasses a implementarem esse construtor)
+	public Pessoa(String nome, String cpf, String telefone, String email, String preferenciaComunicacao,
+<span class="fc" id="L18">			String endereco, String aniversario, String genero) {</span>
+<span class="fc" id="L19">		this.nome = nome;</span>
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">		if (validarCpf(cpf) == false) {</span>
+<span class="nc" id="L21">			throw new IllegalArgumentException(&quot;ERRO: CPF inválido!&quot;);</span>
+		}
+<span class="fc" id="L23">		this.cpf = cpf;</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">		if (validarTelefone(telefone) == false) {</span>
+<span class="nc" id="L25">			throw new IllegalArgumentException(&quot;ERRO: Telefone inválido! Escreva o DDD + número (e.g. 00-000000000).&quot;);</span>
+		}
+<span class="fc" id="L27">		this.telefone = telefone;</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">		if (validarEmail(email) == false) {</span>
+<span class="nc" id="L29">			throw new IllegalArgumentException(&quot;ERRO: Email inválido!&quot;);</span>
+		}
+<span class="fc" id="L31">		this.email = email;</span>
+<span class="fc" id="L32">		this.preferenciaComunicacao = preferenciaComunicacao;</span>
+<span class="fc" id="L33">		this.endereco = endereco;</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">		if (validarAniversario(aniversario) == false) {</span>
+<span class="nc" id="L35">			throw new IllegalArgumentException(&quot;ERRO: Aniversário inválido! Usar o formato: 31/12/2020&quot;);</span>
+		}
+<span class="fc" id="L37">		this.aniversario = aniversario;</span>
+<span class="fc" id="L38">		this.genero = genero;</span>
+<span class="fc" id="L39">	}</span>
+	
+	// Getters/setters
+	public String getNome() {
+<span class="fc" id="L43">		return nome;</span>
+	}
+	public void setNome(String nome) {
+<span class="fc" id="L46">		this.nome = nome;</span>
+<span class="fc" id="L47">	}</span>
+	public String getCpf() {
+<span class="fc" id="L49">		return cpf;</span>
+	}
+	public void setCpf(String cpf) {
+<span class="nc" id="L52">		this.cpf = cpf;</span>
+<span class="nc" id="L53">	}</span>
+	public String getTelefone() {
+<span class="fc" id="L55">		return telefone;</span>
+	}
+	public void setTelefone(String telefone) {
+<span class="nc" id="L58">		this.telefone = telefone;</span>
+<span class="nc" id="L59">	}</span>
+	public String getEmail() {
+<span class="fc" id="L61">		return email;</span>
+	}
+	public void setEmail(String email) {
+<span class="nc" id="L64">		this.email = email;</span>
+<span class="nc" id="L65">	}</span>
+	public String getPreferenciaComunicacao() {
+<span class="fc" id="L67">		return preferenciaComunicacao;</span>
+	}
+	public void setPreferenciaComunicacao(String preferenciaComunicacao) {
+<span class="nc" id="L70">		this.preferenciaComunicacao = preferenciaComunicacao;</span>
+<span class="nc" id="L71">	}</span>
+	public String getEndereco() {
+<span class="fc" id="L73">		return endereco;</span>
+	}
+	public void setEndereco(String endereco) {
+<span class="nc" id="L76">		this.endereco = endereco;</span>
+<span class="nc" id="L77">	}</span>
+	public String getAniversario() {
+<span class="fc" id="L79">		return aniversario;</span>
+	}
+	public void setAniversario(String aniversario) {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">		if (validarAniversario(aniversario) == false) {</span>
+<span class="nc" id="L83">			throw new IllegalArgumentException(&quot;ERRO: Aniversário inválido! Usar o formato: 31/12/2020&quot;);</span>
+		}
+<span class="nc" id="L85">		this.aniversario = aniversario;</span>
+<span class="nc" id="L86">	}</span>
+	public String getGenero() {
+<span class="fc" id="L88">		return genero;</span>
+	}
+	public void setGenero(String genero) {
+<span class="nc" id="L91">		this.genero = genero;</span>
+<span class="nc" id="L92">	}</span>
+	
+	// Validador básico de CPF (sem validação do DV)
+	@Override
+	public boolean validarCpf(String cpf) {
+		// Retira tudo que não é dígito
+<span class="fc" id="L98">		cpf = cpf.replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);</span>
+		// Checa se é nulo/vazio, diferente de 11 ou se é uma sequência de números repetidos
+<span class="pc bpc" id="L100" title="4 of 8 branches missed.">		if (cpf == null || cpf.isEmpty() || cpf.length() != 11 || cpf.matches(&quot;(.)\\1{10,}&quot;)) {</span>
+<span class="nc" id="L101">            return false;</span>
+        }
+<span class="fc" id="L103">        return true;</span>
+	}
+	
+	// Validador de telefone
+	@Override
+	public boolean validarTelefone(String telefone) {
+		// Retira tudo que não é dígito
+<span class="fc" id="L110">		telefone = telefone.replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);</span>
+		
+		// Checa se telefone contém 10 ou 11 dígitos
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">		if (telefone.length() == 10 || telefone.length() == 11) {</span>
+<span class="fc" id="L114">			return true;</span>
+		}
+<span class="nc" id="L116">		return false;</span>
+	}
+	
+	// Validador de email
+	@Override
+	public boolean validarEmail(String email) {
+		// Verifica se é nulo/vazio
+<span class="pc bpc" id="L123" title="2 of 4 branches missed.">		if (email == null || email.isEmpty()) {</span>
+<span class="nc" id="L124">			return false;</span>
+		}
+		// Verifica se contém @
+<span class="fc" id="L127">		return email.matches(&quot;^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$&quot;);</span>
+	}
+	
+	// Validador de aniversário
+	@Override
+	public boolean validarAniversario(String aniversario) {
+		// Tenta realizar parse para transformar em objeto LocalDate
+		try {
+<span class="fc" id="L135">			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;);</span>
+<span class="fc" id="L136">			LocalDate.parse(aniversario, formatter);</span>
+<span class="fc" id="L137">			return true;</span>
+<span class="nc" id="L138">		} catch (DateTimeParseException e) {</span>
+<span class="nc" id="L139">			return false;</span>
+		}
+	}
+	
+	// Calculadora de idade
+	public int calcularIdade(String aniversario) {
+<span class="fc" id="L145">		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;);</span>
+<span class="fc" id="L146">		LocalDate aniversarioData = LocalDate.parse(aniversario, formatter);</span>
+<span class="fc" id="L147">		int anoNascimento = aniversarioData.getYear();</span>
+<span class="fc" id="L148">		return LocalDate.now().getYear() - anoNascimento;</span>
+	}
+	
+	// getIdade
+	public int getIdade() {
+<span class="fc" id="L153">		return calcularIdade(this.aniversario);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

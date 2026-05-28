@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FuncionarioController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">FuncionarioController.java</span></div><h1>FuncionarioController.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.util.List;
+import java.util.Scanner;
+
+import com.grupitxo.enums.Cargo;
+
+public class FuncionarioController {
+    private FuncionarioView view;
+    private FuncionarioViewFactory factory;
+    private FuncionarioStorageStrategy adapter;
+
+    // Construtor
+<span class="fc" id="L14">    public FuncionarioController(FuncionarioView view, FuncionarioViewFactory factory, FuncionarioStorageStrategy adapter) {</span>
+<span class="fc" id="L15">        this.view = view;</span>
+<span class="fc" id="L16">        this.factory = factory;</span>
+<span class="fc" id="L17">        this.adapter = adapter;</span>
+<span class="fc" id="L18">    }</span>
+
+    // SELEÇÃO E BUSCA
+    public Funcionario selecionarFuncionarioParaAcao(Scanner sc) {
+<span class="fc" id="L22">        int opcao = view.mostrarMenuSelecao(sc);</span>
+
+<span class="pc bpc" id="L24" title="3 of 4 branches missed.">        switch (opcao) {</span>
+            case 1:
+<span class="fc" id="L26">                int idBusca = view.pedirIdParaBusca(sc);</span>
+<span class="fc" id="L27">                return adapter.buscarPorId(idBusca); </span>
+
+            case 2:
+<span class="nc" id="L30">                String nomeBusca = view.pedirNomeParaBusca(sc);</span>
+<span class="nc" id="L31">                return adapter.buscarPorNome(nomeBusca); </span>
+
+            case 0:
+<span class="nc" id="L34">                System.out.println(&quot;Voltando ao menu anterior...&quot;);</span>
+<span class="nc" id="L35">                return null;</span>
+
+            default:
+<span class="nc" id="L38">                System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L39">                return null;</span>
+        }
+    }
+
+    public void rotinaListarFuncionarios() {
+<span class="nc" id="L44">        List&lt;Funcionario&gt; lista = adapter.buscarTodos();</span>
+<span class="nc" id="L45">        view.exibirListaFuncionarios(lista);</span>
+<span class="nc" id="L46">    }</span>
+
+    // rotinas CREATE, UPDATE, DELETE
+    // CREATE
+    public void rotinaCriarFuncionario(Scanner sc) {
+        // A View/Factory tenta criar. Se der IllegalArgumentException vai retornar null
+<span class="nc" id="L52">        Funcionario novoFuncionario = factory.criarFuncionarioNovo(sc);</span>
+        
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (novoFuncionario != null) {</span>
+<span class="nc" id="L55">            adapter.salvar(novoFuncionario);</span>
+<span class="nc" id="L56">            System.out.println(&quot;Funcionário registrado com sucesso!&quot;);</span>
+        } else {
+<span class="nc" id="L58">            System.out.println(&quot;ERRO! Cadastro cancelado devido a dados inválidos.&quot;);</span>
+        }
+<span class="nc" id="L60">    }</span>
+
+    // UPDATE
+    public void rotinaAtualizarFuncionario(Scanner sc) {
+        // seleciona o funcionário p atualizar
+<span class="nc" id="L65">        Funcionario alvo = selecionarFuncionarioParaAcao(sc);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (alvo == null) {</span>
+<span class="nc" id="L67">            System.out.println(&quot;Nenhum funcionário selecionado. Operação cancelada.&quot;);</span>
+<span class="nc" id="L68">            return;</span>
+        }
+
+        // Mostra os dados atuais para o usuário conferir
+<span class="nc" id="L72">        view.exibirFuncionario(alvo);</span>
+
+        // Mostra o menu e pega o que o usuário quer alterar
+<span class="nc" id="L75">        int opcao = view.opcaoEdicao(sc);</span>
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (opcao == 0) {</span>
+<span class="nc" id="L78">            System.out.println(&quot;Modificação cancelada. Voltando...&quot;);</span>
+<span class="nc" id="L79">            return;</span>
+        }
+
+        // Estrutura para capturar o dado, alterar no objeto (em memória) e mandar pro DB
+        try {
+<span class="nc bnc" id="L84" title="All 11 branches missed.">            switch (opcao) {</span>
+                case 1:
+<span class="nc" id="L86">                    String novoNome = view.pedirNovoDadoTexto(sc, &quot;nome&quot;);</span>
+<span class="nc" id="L87">                    alvo.setNome(novoNome);</span>
+<span class="nc" id="L88">                    break;</span>
+                case 2:
+<span class="nc" id="L90">                    String novoCpf = view.pedirNovoDadoTexto(sc, &quot;CPF&quot;);</span>
+<span class="nc" id="L91">                    alvo.setCpf(novoCpf);</span>
+<span class="nc" id="L92">                    break;</span>
+                case 3:
+<span class="nc" id="L94">                    String novoTelefone = view.pedirNovoDadoTexto(sc, &quot;telefone&quot;);</span>
+<span class="nc" id="L95">                    alvo.setTelefone(novoTelefone);</span>
+<span class="nc" id="L96">                    break;</span>
+                case 4:
+<span class="nc" id="L98">                    String novoEmail = view.pedirNovoDadoTexto(sc, &quot;email&quot;);</span>
+<span class="nc" id="L99">                    alvo.setEmail(novoEmail);</span>
+<span class="nc" id="L100">                    break;</span>
+                case 5:
+<span class="nc" id="L102">                    String novaPref = view.pedirNovoDadoTexto(sc, &quot;preferência de comunicação&quot;);</span>
+<span class="nc" id="L103">                    alvo.setPreferenciaComunicacao(novaPref);</span>
+<span class="nc" id="L104">                    break;</span>
+                case 6:
+<span class="nc" id="L106">                    String novoEndereco = view.pedirNovoDadoTexto(sc, &quot;endereço&quot;);</span>
+<span class="nc" id="L107">                    alvo.setEndereco(novoEndereco);</span>
+<span class="nc" id="L108">                    break;</span>
+                case 7:
+<span class="nc" id="L110">                    String novoAniversario = view.pedirNovoDadoTexto(sc, &quot;aniversário&quot;);</span>
+<span class="nc" id="L111">                    alvo.setAniversario(novoAniversario);</span>
+<span class="nc" id="L112">                    break;</span>
+                case 8:
+<span class="nc" id="L114">                    String novoGenero = view.pedirNovoDadoTexto(sc, &quot;gênero&quot;);</span>
+<span class="nc" id="L115">                    alvo.setGenero(novoGenero);</span>
+<span class="nc" id="L116">                    break;</span>
+                case 9:
+<span class="nc" id="L118">                    int opCargo = view.pedirNovoCargo(sc);</span>
+<span class="nc bnc" id="L119" title="All 5 branches missed.">                    switch (opCargo) {</span>
+<span class="nc" id="L120">                        case 1 -&gt; alvo.setCargo(Cargo.VENDEDOR);</span>
+<span class="nc" id="L121">                        case 2 -&gt; alvo.setCargo(Cargo.CAIXA);</span>
+<span class="nc" id="L122">                        case 3 -&gt; alvo.setCargo(Cargo.ESTOQUISTA);</span>
+<span class="nc" id="L123">                        case 4 -&gt; alvo.setCargo(Cargo.SOCIO);</span>
+<span class="nc" id="L124">                        default -&gt; throw new IllegalArgumentException(&quot;Opção de cargo inválida.&quot;);</span>
+                    }
+                    break;
+                case 10:
+<span class="nc" id="L128">                    double novoSalario = view.pedirNovoDadoDecimal(sc, &quot;salário&quot;);</span>
+<span class="nc" id="L129">                    alvo.setSalario(novoSalario);</span>
+<span class="nc" id="L130">                    break;</span>
+                default:
+<span class="nc" id="L132">                    System.err.println(&quot;ERRO! Opção inválida.&quot;);</span>
+<span class="nc" id="L133">                    return; // Sai do método sem atualizar o banco</span>
+            }
+
+            // Se chegou aqui, o dado foi alterado na memória com sucesso. Vamos salvar no banco.
+<span class="nc" id="L137">            adapter.atualizar(alvo);</span>
+<span class="nc" id="L138">            System.out.println(&quot;Funcionário atualizado com sucesso no sistema!&quot;);</span>
+
+<span class="nc" id="L140">        } catch (IllegalArgumentException e) {</span>
+            // Caso o setter dispare um erro (ex: CPF inválido, Salário negativo), capturamos aqui
+<span class="nc" id="L142">            System.err.println(&quot;ERRO! Falha ao atualizar: &quot; + e.getMessage());</span>
+<span class="nc" id="L143">        }</span>
+<span class="nc" id="L144">    }</span>
+    
+    // REMOVE
+    public void rotinaRemoverFuncionario(Scanner sc) {
+<span class="nc" id="L148">        Funcionario alvo = selecionarFuncionarioParaAcao(sc);</span>
+
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (alvo == null) {</span>
+<span class="nc" id="L151">            System.out.println(&quot;Nenhum funcionário selecionado. Operação cancelada.&quot;);</span>
+<span class="nc" id="L152">            return;</span>
+        }
+
+<span class="nc" id="L155">        view.exibirFuncionario(alvo);</span>
+<span class="nc" id="L156">        view.pedirConfirmacao(sc); // TODO: testar isso</span>
+<span class="nc" id="L157">        adapter.remover(alvo);</span>
+<span class="nc" id="L158">        System.out.println(&quot;Funcionário removido com sucesso!&quot;);</span>
+<span class="nc" id="L159">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

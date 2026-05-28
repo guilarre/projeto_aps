@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cliente.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Cliente.java</span></div><h1>Cliente.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+public class Cliente extends Pessoa {
+	private final int idCliente;
+	
+	// Construtor 1: PASSANDO ID
+	public Cliente(int idCliente, String nome, String cpf, String telefone, String email, String preferenciaComunicacao, String endereco, String aniversario, String genero) {
+<span class="nc" id="L8">		super(nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero);</span>
+
+<span class="nc" id="L10">		this.idCliente = idCliente;</span>
+<span class="nc" id="L11">	}</span>
+
+	// Construtor 2: SEM ID
+	public Cliente(String nome, String cpf, String telefone, String email, String preferenciaComunicacao, String endereco, String aniversario, String genero) {
+<span class="nc" id="L15">		this(0, nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero);</span>
+<span class="nc" id="L16">	}</span>
+	
+	// Getters/setters
+	public int getIdCliente() {
+<span class="nc" id="L20">		return idCliente;</span>
+	}
+	
+	// toString()
+	@Override
+	public String toString() {
+<span class="nc" id="L26">		return String.format(&quot;&quot;&quot;</span>
+
+Id do cliente: '%d'
+
+Nome: %s
+CPF: %s
+Telefone: %s
+Email: %s
+Preferência de comunicação: %s
+Endereço: %s
+Aniversário: %s
+Idade: %d
+Gênero: %s
+
+<span class="nc" id="L40">&quot;&quot;&quot;, this.getIdCliente(), this.getNome(), this.getCpf(), this.getTelefone(), this.getEmail(), this.getPreferenciaComunicacao(), this.getEndereco(), this.getAniversario(), this.getIdade(), this.getGenero());</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Historico.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Historico.java</span></div><h1>Historico.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import com.grupitxo.classes.Compra.CompraProduto;
+import com.grupitxo.enums.Status;
+
+<span class="nc" id="L10">public class Historico {</span>
+	// por enquanto tem que ser assim diretamente pelo histórico, mas futuramente seria tudo pelo controller
+	private static FuncionarioStorageStrategy funcionarioAdapter;
+	private static ClienteStorageStrategy clienteAdapter;
+	static {
+        try {
+<span class="nc" id="L16">            funcionarioAdapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());</span>
+<span class="nc" id="L17">            clienteAdapter = new ClienteDbAdapter(DatabaseConfig.getConnection());</span>
+<span class="nc" id="L18">        } catch (SQLException e) {</span>
+<span class="nc" id="L19">            System.err.println(&quot;Erro fatal: Não foi possível conectar ao banco de dados para os Funcionários.&quot;);</span>
+<span class="nc" id="L20">            e.printStackTrace();</span>
+            // Se der erro na conexão, o funcionarioAdapter ficará nulo, 
+            // então você já sabe que se estourar NullPointerException depois, foi o banco que não subiu.
+<span class="nc" id="L23">        }</span>
+    }
+
+<span class="nc" id="L26">	private static ArrayList&lt;Compra&gt; historico = new ArrayList&lt;Compra&gt;();</span>
+	
+	// CRUD
+	// CREATE para carregar .json
+	public static void addToHistorico(Compra compra) {
+<span class="nc" id="L31">		historico.add(compra);</span>
+<span class="nc" id="L32">	}</span>
+	// READ do objeto historico
+	public static ArrayList&lt;Compra&gt; getHistorico() {
+<span class="nc" id="L35">		return historico;</span>
+	}
+	// READ para exibir histórico geral ao usuário
+	public static String exibirHistoricoCompleto() {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">		if (historico.isEmpty()) {</span>
+<span class="nc" id="L40">			System.err.println(&quot;ERRO! Ainda não existem compras registradas&quot;);</span>
+<span class="nc" id="L41">			return null;</span>
+		}
+<span class="nc" id="L43">		StringBuilder historicoCompleto = new StringBuilder();</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">		for (int i = 0; i &lt; historico.size(); i++) {</span>
+<span class="nc" id="L45">			historicoCompleto.append(String.format(&quot;Índice: %d\nCompra:\n%s\n\n&quot;, i + 1, historico.get(i).toString()));</span>
+		}
+<span class="nc" id="L47">		return String.valueOf(historicoCompleto);</span>
+	}
+	// READ para exibir compra específica ao usuário
+	public static String getCompraByIndex(int idx) {
+		try {
+<span class="nc" id="L52">			return String.format(&quot;Índice: %d\nCompra:\n%s&quot;, idx + 1, historico.get(idx).toString());</span>
+<span class="nc" id="L53">		} catch (IndexOutOfBoundsException e) {</span>
+<span class="nc" id="L54">			return null;</span>
+		}
+	}
+	// READ para exibir ao usuário compras de um cliente específico
+	public static String getHistoricoCliente(int idCliente) {
+		// Checar primeiro se idCliente existe
+<span class="nc" id="L60">		ArrayList&lt;Integer&gt; idsDisponiveis = new ArrayList&lt;Integer&gt;();</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		for (Cliente cliente : clienteAdapter.buscarTodos()) {</span>
+<span class="nc" id="L62">			idsDisponiveis.add(cliente.getIdCliente());</span>
+<span class="nc" id="L63">		}</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		if (idsDisponiveis.contains(idCliente) == false) {</span>
+<span class="nc" id="L65">			System.out.println(String.format(&quot;ERRO! A id '%d' não foi registrada ainda&quot;, idCliente));</span>
+<span class="nc" id="L66">			return null;</span>
+		}
+		// Existindo, pegar nome do cliente
+<span class="nc" id="L69">		String nomeCliente = clienteAdapter.buscarPorId(idCliente).getNome();</span>
+		// Pegar histórico do cliente
+<span class="nc" id="L71">		StringBuilder historicoCliente = new StringBuilder();</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">		for (int i = 0; i &lt; historico.size(); i++) {</span>
+<span class="nc" id="L73">			Compra compra = historico.get(i);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (compra.getIdCliente() == idCliente) {</span>
+<span class="nc" id="L75">				historicoCliente.append(compra.toString());</span>
+			}
+		}
+<span class="nc bnc" id="L78" title="All 2 branches missed.">		if (historicoCliente.isEmpty()) {</span>
+<span class="nc" id="L79">			System.out.println(String.format(&quot;ERRO! O cliente de id '%d' ainda não possui compras registradas&quot;, idCliente));</span>
+<span class="nc" id="L80">			return null;</span>
+		}
+<span class="nc" id="L82">		return String.format(&quot;&quot;&quot;</span>
+
+Compras de %s (id do cliente: '%d'):
+<span class="nc" id="L85">%s&quot;&quot;&quot;, nomeCliente, idCliente, String.valueOf(historicoCliente));</span>
+	}
+	// READ para exibir ao usuário vendas de um funcionário específico
+	public static String getHistoricoFuncionario(int idFuncionario) {
+		// Checar primeiro se idFuncionario existe
+<span class="nc" id="L90">		ArrayList&lt;Integer&gt; idsDisponiveis = new ArrayList&lt;Integer&gt;(); </span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		for (Funcionario funcionario : funcionarioAdapter.buscarTodos()) {</span>
+<span class="nc" id="L92">			idsDisponiveis.add(funcionario.getIdFuncionario());</span>
+<span class="nc" id="L93">		}</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">		if (idsDisponiveis.contains(idFuncionario) == false) {</span>
+<span class="nc" id="L95">			System.out.println(String.format(&quot;ERRO! A id '%d' não foi registrada ainda&quot;, idFuncionario));</span>
+<span class="nc" id="L96">			return null;</span>
+		}
+		// Existindo, pegar nome do cliente
+<span class="nc" id="L99">		String nomeFuncionario = funcionarioAdapter.buscarPorId(idFuncionario).getNome();</span>
+		// Pegar histórico do funcionário
+<span class="nc" id="L101">		StringBuilder historicoFuncionario = new StringBuilder();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">		for (int i = 0; i &lt; historico.size(); i++) {</span>
+<span class="nc" id="L103">			Compra compra = historico.get(i);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">			if (compra.getIdFuncionario() == idFuncionario) {</span>
+<span class="nc" id="L105">				historicoFuncionario.append(compra.toString());</span>
+			}
+		}
+<span class="nc bnc" id="L108" title="All 2 branches missed.">		if (historicoFuncionario.isEmpty()) {</span>
+<span class="nc" id="L109">			System.out.println(String.format(&quot;ERRO! O funcionário de id '%d' ainda não possui vendas registradas&quot;, idFuncionario));</span>
+<span class="nc" id="L110">			return null;</span>
+		}
+<span class="nc" id="L112">		return String.format(&quot;&quot;&quot;</span>
+				
+Vendas de %s (id '%d'):
+<span class="nc" id="L115">%s&quot;&quot;&quot;, nomeFuncionario, idFuncionario, String.valueOf(historicoFuncionario));</span>
+	}
+	// UPDATE
+	public static void cancelarCompra(int idx) {
+<span class="nc" id="L119">		Compra compraACancelar = historico.get(idx);</span>
+		// Alterando qtd em estoque após cancelar
+<span class="nc" id="L121">		Compra.incrementarEstoque(compraACancelar.getListaCompraProdutos());</span>
+<span class="nc" id="L122">		compraACancelar.setStatus(Status.CANCELADA);</span>
+<span class="nc" id="L123">	}</span>
+
+	// Gerar relatório do mês
+	public static String gerarRelatorio() {
+<span class="nc" id="L127">		ArrayList&lt;Compra&gt; comprasMes = new ArrayList&lt;Compra&gt;();</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">		for (Compra compra : historico) {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">			if (compra.getObjetoDataHora().getMonth() == LocalDate.now().getMonth()) {</span>
+<span class="nc" id="L130">				comprasMes.add(compra);</span>
+			}
+<span class="nc" id="L132">		}</span>
+<span class="nc" id="L133">		int qtdCompradaMes = 0;</span>
+<span class="nc" id="L134">		double totalCompradoMes = 0;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">		for (Compra compra : comprasMes) {</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">			for (CompraProduto compraProduto : compra.getListaCompraProdutos()) {</span>
+<span class="nc" id="L137">				qtdCompradaMes += compraProduto.getQtdComprada();</span>
+<span class="nc" id="L138">			}</span>
+<span class="nc" id="L139">			totalCompradoMes += compra.getTotal();</span>
+<span class="nc" id="L140">		}</span>
+<span class="nc" id="L141">		return String.format(&quot;&quot;&quot;</span>
+
+############ Relatório do mês ############
+
+Foram realizadas %d compras neste mês,
+Totalizando: R$ %.2f.
+
+<span class="nc" id="L148">&quot;&quot;&quot;, qtdCompradaMes, totalCompradoMes);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

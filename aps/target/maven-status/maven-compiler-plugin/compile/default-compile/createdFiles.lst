@@ -1,7 +1,7 @@
 com/grupitxo/classes/FuncionarioViewFactory.class
 com/grupitxo/enums/PrefCom.class
-com/grupitxo/classes/Compra$1.class
 com/grupitxo/classes/JsonWriter$1.class
+com/grupitxo/classes/Compra$1.class
 com/grupitxo/classes/StringsMenu.class
 com/grupitxo/classes/Produto$1.class
 com/grupitxo/classes/FuncionarioController.class
@@ -14,14 +14,14 @@ com/grupitxo/classes/Compra.class
 com/grupitxo/classes/JsonReader.class
 com/grupitxo/classes/FuncionarioView.class
 com/grupitxo/classes/Historico.class
-com/grupitxo/classes/Funcionario.class
 com/grupitxo/classes/ClienteController.class
+com/grupitxo/classes/Funcionario.class
 com/grupitxo/enums/Cargo.class
 com/grupitxo/classes/FuncionarioStorageStrategy.class
 com/grupitxo/classes/ProdutoDbAdapter.class
 com/grupitxo/classes/Main.class
-com/grupitxo/enums/Pagamento.class
 com/grupitxo/classes/Venda.class
+com/grupitxo/enums/Pagamento.class
 com/grupitxo/classes/JsonReader$1.class
 com/grupitxo/enums/Categoria.class
 com/grupitxo/classes/Produto.class
@@ -29,8 +29,8 @@ com/grupitxo/classes/Cliente.class
 com/grupitxo/typeadapter/CompraTypeAdapter.class
 com/grupitxo/classes/JsonWriter.class
 com/grupitxo/classes/ClienteView.class
-com/grupitxo/enums/Genero.class
 com/grupitxo/classes/Validavel.class
+com/grupitxo/enums/Genero.class
 com/grupitxo/classes/Compra$CompraProduto.class
 com/grupitxo/typeadapter/ProdutoTypeAdapter.class
 com/grupitxo/classes/Pessoa.class

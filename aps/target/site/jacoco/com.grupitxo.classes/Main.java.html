@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+<span class="nc" id="L6">public class Main {</span>
+
+	public static void main(String[] args) {
+<span class="nc" id="L9">		Scanner sc = new Scanner(System.in);</span>
+		// instanciando os view/controller/adapter pra funcionário:
+<span class="nc" id="L11">		FuncionarioStorageStrategy funcionarioAdapter = null;</span>
+<span class="nc" id="L12">        FuncionarioView funcionarioView = null;</span>
+<span class="nc" id="L13">        FuncionarioViewFactory funcionarioFactory = null; </span>
+<span class="nc" id="L14">        FuncionarioController funcionarioController = null;</span>
+		// instanciando pra cliente:
+<span class="nc" id="L16">		ClienteStorageStrategy clienteAdapter = null;</span>
+<span class="nc" id="L17">        ClienteView clienteView = null;</span>
+<span class="nc" id="L18">        ClienteViewFactory clienteFactory = null; </span>
+<span class="nc" id="L19">        ClienteController clienteController = null;</span>
+		// módulo de venda
+<span class="nc" id="L21">        Venda moduloVenda = null;</span>
+		
+		try {
+            // Instanciando as dependências para funcionário (Adapter, View, Factory)
+<span class="nc" id="L25">            funcionarioAdapter = new FuncionarioDbAdapter(DatabaseConfig.getConnection());</span>
+<span class="nc" id="L26">            funcionarioView = new FuncionarioView();</span>
+<span class="nc" id="L27">            funcionarioFactory = new FuncionarioViewFactory(); </span>
+<span class="nc" id="L28">			funcionarioController = new FuncionarioController(funcionarioView, funcionarioFactory, funcionarioAdapter);</span>
+            // Instanciando as dependências para cliente (Adapter, View, Factory)
+<span class="nc" id="L30">			clienteAdapter = new ClienteDbAdapter(DatabaseConfig.getConnection());</span>
+<span class="nc" id="L31">            clienteView = new ClienteView();</span>
+<span class="nc" id="L32">            clienteFactory = new ClienteViewFactory();</span>
+<span class="nc" id="L33">			clienteController = new ClienteController(clienteView, clienteFactory, clienteAdapter);</span>
+            // Instanciando a classe Venda e INJETANDO o controller
+<span class="nc" id="L35">            moduloVenda = new Venda(funcionarioController, clienteController);</span>
+<span class="nc" id="L36">        } catch (SQLException e) {</span>
+<span class="nc" id="L37">            System.err.println(&quot;Falha crítica: Não foi possível conectar ao banco de dados ao iniciar o sistema.&quot;);</span>
+<span class="nc" id="L38">            e.printStackTrace();</span>
+<span class="nc" id="L39">        }</span>
+
+		// se der certo, vai inicializar o BD:
+<span class="nc" id="L42">		DatabaseConfig.inicializarBanco();</span>
+
+		// Carregar arquivos em memória
+		try {			
+<span class="nc" id="L46">			JsonReader.carregarEstoque();</span>
+<span class="nc" id="L47">			JsonReader.carregarHistorico();</span>
+<span class="nc" id="L48">		} catch (NullPointerException e) {</span>
+<span class="nc" id="L49">		}</span>
+		
+		// Menu principal
+		loopMain: while (true) {
+<span class="nc" id="L53">			System.out.println(StringsMenu.menuPrincipal);</span>
+<span class="nc" id="L54">			int opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L55" title="All 7 branches missed.">			switch (opcao) {</span>
+				// Menu clientes
+				// NOTE: exemplo do que foi mudado após refatoração
+				case 1:
+<span class="nc" id="L59">					Cliente cliente = null;</span>
+					loopCliente: while (true) {
+<span class="nc" id="L61">						System.out.println(StringsMenu.menuClientes);</span>
+<span class="nc" id="L62">						opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L63" title="All 8 branches missed.">						switch (opcao) {</span>
+							// Exibir todos os clientes
+							case 1:
+<span class="nc" id="L66">								clienteController.rotinaListarClientes();</span>
+<span class="nc" id="L67">								break;</span>
+							// Exibir informações de um cliente
+							case 2:
+<span class="nc" id="L70">								cliente = clienteController.selecionarClienteParaAcao(sc);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">								if (cliente != null) {</span>
+<span class="nc" id="L72">									clienteView.exibirCliente(cliente);</span>
+								} else {
+<span class="nc" id="L74">									System.out.println(&quot;Operação cancelada&quot;);</span>
+								}
+<span class="nc" id="L76">								break;</span>
+							// Exibir histórico de compras de um cliente
+							case 3:
+<span class="nc" id="L79">								cliente = clienteController.selecionarClienteParaAcao(sc);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">								if (cliente != null) {</span>
+<span class="nc" id="L81">									System.out.println(Historico.getHistoricoCliente(cliente.getIdCliente()));</span>
+								} else {
+<span class="nc" id="L83">									System.out.println(&quot;Operação cancelada!&quot;);</span>
+								}
+<span class="nc" id="L85">								break;</span>
+							// Registrar um cliente
+							case 4:
+<span class="nc" id="L88">								clienteController.rotinaCriarCliente(sc);</span>
+<span class="nc" id="L89">								break;</span>
+							// Modificar um cliente
+							case 5:
+<span class="nc" id="L92">								clienteController.rotinaAtualizarCliente(sc);</span>
+<span class="nc" id="L93">								break;</span>
+							// Remover um cliente
+							case 6:
+<span class="nc" id="L96">								clienteController.rotinaRemoverCliente(sc);</span>
+<span class="nc" id="L97">								break;</span>
+							// Retornar ao menu principal
+							case 0:
+<span class="nc" id="L100">								break loopCliente;</span>
+							default:
+<span class="nc" id="L102">								System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L103">								break;</span>
+						}
+					}
+					break;
+				// Menu funcionários
+				// NOTE: exemplo do que foi mudado após refatoração
+				case 2:
+<span class="nc" id="L110">					Funcionario funcionario = null;</span>
+					loopFuncionario: while (true) {
+<span class="nc" id="L112">						System.out.println(StringsMenu.menuFuncionarios);</span>
+<span class="nc" id="L113">						opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L114" title="All 8 branches missed.">						switch (opcao) {</span>
+						// Exibir todos os funcionários
+						case 1:
+<span class="nc" id="L117">							funcionarioController.rotinaListarFuncionarios();</span>
+<span class="nc" id="L118">							break;</span>
+						// Exibir informações de um funcionário
+						case 2:
+<span class="nc" id="L121">							funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">							if (funcionario != null) {</span>
+<span class="nc" id="L123">								funcionarioView.exibirFuncionario(funcionario);</span>
+							} else {
+<span class="nc" id="L125">								System.out.println(&quot;Operação cancelada&quot;);</span>
+							}
+<span class="nc" id="L127">							break;</span>
+						// Exibir histórico de vendas de um funcionário
+						case 3:
+<span class="nc" id="L130">							funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">							if (funcionario != null) {</span>
+<span class="nc" id="L132">								System.out.println(Historico.getHistoricoFuncionario(funcionario.getIdFuncionario()));</span>
+							} else {
+<span class="nc" id="L134">								System.out.println(&quot;Operação cancelada!&quot;);</span>
+							}
+<span class="nc" id="L136">							break;</span>
+						// Registrar um funcionário
+						case 4:
+<span class="nc" id="L139">							funcionarioController.rotinaCriarFuncionario(sc);</span>
+<span class="nc" id="L140">							break;</span>
+						// Modificar um funcionário
+						// NOTE: exemplo da maior mudança
+						case 5:
+<span class="nc" id="L144">							funcionarioController.rotinaAtualizarFuncionario(sc);</span>
+<span class="nc" id="L145">							break;</span>
+						// Remover um funcionário
+						case 6:
+<span class="nc" id="L148">							funcionarioController.rotinaRemoverFuncionario(sc);</span>
+<span class="nc" id="L149">							break;</span>
+						// Retornar ao menu principal
+						case 0:
+<span class="nc" id="L152">							break loopFuncionario;</span>
+						default:
+<span class="nc" id="L154">							System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L155">							break;</span>
+						}
+					}
+					break;
+				// Menu estoque
+				case 3:
+					loopEstoque: while (true) {
+<span class="nc" id="L162">						System.out.println(StringsMenu.menuEstoque);</span>
+<span class="nc" id="L163">						opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L164" title="All 6 branches missed.">						switch (opcao) {</span>
+							// Pesquisar um produto em estoque
+							case 1:
+<span class="nc" id="L167">								Produto produto = Produto.selecionarProduto();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">								if (produto != null) {</span>
+<span class="nc" id="L169">									System.out.println(produto.toString());</span>
+								} else {
+<span class="nc" id="L171">									System.out.println(&quot;Operação cancelada&quot;);</span>
+								}
+<span class="nc" id="L173">								break;</span>
+							// Exibir todas as categorias
+							case 2:
+<span class="nc" id="L176">								System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Categorias disponíveis
+
+<span class="nc" id="L180">%s&quot;&quot;&quot;, Produto.getTodasCategorias()));</span>
+<span class="nc" id="L181">								break;</span>
+							// Exibir todo o estoque
+							case 3:
+<span class="nc bnc" id="L184" title="All 2 branches missed.">								for (Produto produtoAExibir : Produto.getListaProdutos()) {</span>
+<span class="nc" id="L185">									System.out.println(produtoAExibir);</span>
+<span class="nc" id="L186">								}</span>
+<span class="nc" id="L187">								break;</span>
+							// Gerenciar estoque
+							case 4:
+								loopGerenciarEstoque: while (true) {
+<span class="nc" id="L191">									System.out.println(StringsMenu.menuGerenciarEstoque);</span>
+<span class="nc" id="L192">									opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L193" title="All 5 branches missed.">									switch (opcao) {</span>
+										// Adicionar produto novo ao estoque
+										case 1:
+<span class="nc" id="L196">											Produto produtoNovo = Produto.getProdutoNovo();</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">											if (produtoNovo != null) {</span>
+<span class="nc" id="L198">												System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto adicionado com sucesso:
+<span class="nc" id="L201">%s&quot;&quot;&quot;, produtoNovo.toString()));</span>
+											} else {
+<span class="nc" id="L203">												System.out.println(&quot;Operação cancelada&quot;);</span>
+											}
+<span class="nc" id="L205">											break;</span>
+										// Modificar produto no estoque
+										case 2:
+<span class="nc" id="L208">											Produto produtoModificado = null;</span>
+<span class="nc" id="L209">											Produto produtoAModificar = Produto.selecionarProduto();</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">											if (produtoAModificar != null) {</span>
+												loopModificarProduto: while (true) {
+<span class="nc" id="L212">													System.out.println(StringsMenu.menuModificarProduto);</span>
+<span class="nc" id="L213">													opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L214" title="All 8 branches missed.">													switch (opcao) {</span>
+														case 1:
+<span class="nc" id="L216">															produtoModificado = Produto.modificarProduto(produtoAModificar, opcao);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">															if (produtoModificado == null) {</span>
+<span class="nc" id="L218">																System.out.println(&quot;Modificação cancelada!&quot;);</span>
+															}
+<span class="nc" id="L220">															System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto modificado com sucesso:
+<span class="nc" id="L223">%s&quot;&quot;&quot;, produtoModificado.toString()));</span>
+<span class="nc" id="L224">															break;</span>
+														case 2:
+<span class="nc" id="L226">															produtoModificado = Produto.modificarProduto(produtoAModificar, opcao);</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">															if (produtoModificado == null) {</span>
+<span class="nc" id="L228">																System.out.println(&quot;Modificação cancelada!&quot;);</span>
+															}
+<span class="nc" id="L230">															System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto modificado com sucesso:
+<span class="nc" id="L233">%s&quot;&quot;&quot;, produtoModificado.toString()));</span>
+<span class="nc" id="L234">															break;</span>
+														case 3:
+<span class="nc" id="L236">															produtoModificado = Produto.modificarProduto(produtoAModificar, opcao);</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">															if (produtoModificado == null) {</span>
+<span class="nc" id="L238">																System.out.println(&quot;Modificação cancelada!&quot;);</span>
+															}
+<span class="nc" id="L240">															System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto modificado com sucesso:
+<span class="nc" id="L243">%s&quot;&quot;&quot;, produtoModificado.toString()));</span>
+<span class="nc" id="L244">															break;</span>
+														case 4:
+<span class="nc" id="L246">															produtoModificado = Produto.modificarProduto(produtoAModificar, opcao);</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">															if (produtoModificado == null) {</span>
+<span class="nc" id="L248">																System.out.println(&quot;Modificação cancelada!&quot;);</span>
+															}
+<span class="nc" id="L250">															System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto modificado com sucesso:
+<span class="nc" id="L253">%s&quot;&quot;&quot;, produtoModificado.toString()));</span>
+<span class="nc" id="L254">															break;</span>
+														case 5:
+<span class="nc" id="L256">															produtoModificado = Produto.modificarProduto(produtoAModificar, opcao);</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">															if (produtoModificado == null) {</span>
+<span class="nc" id="L258">																System.out.println(&quot;Modificação cancelada!&quot;);</span>
+															}
+<span class="nc" id="L260">															System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto modificado com sucesso:
+<span class="nc" id="L263">%s&quot;&quot;&quot;, produtoModificado.toString()));</span>
+<span class="nc" id="L264">															break;</span>
+														case 6:
+<span class="nc" id="L266">															produtoModificado = Produto.modificarProduto(produtoAModificar, opcao);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">															if (produtoModificado == null) {</span>
+<span class="nc" id="L268">																System.out.println(&quot;Modificação cancelada!&quot;);</span>
+															}
+<span class="nc" id="L270">															System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Produto modificado com sucesso:
+%ss
+<span class="nc" id="L274">&quot;&quot;&quot;, produtoModificado.toString()));</span>
+<span class="nc" id="L275">															break;</span>
+														case 0:
+<span class="nc" id="L277">															break loopModificarProduto;</span>
+														default:
+<span class="nc" id="L279">															System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L280">															break;</span>
+													}
+												}
+											} else {
+<span class="nc" id="L284">												System.out.println(&quot;Operação cancelada&quot;);</span>
+											}
+<span class="nc" id="L286">											break;</span>
+										// Remover produto do estoque
+										case 3:
+<span class="nc" id="L289">											Produto produtoARemover = Produto.selecionarProduto();</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">											if (produtoARemover != null) {</span>
+<span class="nc" id="L291">												Produto.removerProduto(produtoARemover);</span>
+											} else {
+<span class="nc" id="L293">												System.out.println(&quot;Operação cancelada&quot;);</span>
+											}
+<span class="nc" id="L295">											break;</span>
+										// Retornar ao menu anterior
+										case 0:
+<span class="nc" id="L298">											break loopGerenciarEstoque;</span>
+										default:
+<span class="nc" id="L300">											System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L301">											break;</span>
+									}
+								}
+								break;
+							// Retornar ao menu principal
+							case 0:
+<span class="nc" id="L307">								break loopEstoque;</span>
+							default:
+<span class="nc" id="L309">								System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L310">								break;</span>
+						}
+					}
+					break;
+				// Menu vendas
+				case 4:
+					loopMenuVendas: while (true) {
+<span class="nc" id="L317">						System.out.println(StringsMenu.menuVendas);</span>
+<span class="nc" id="L318">						boolean vendaSucesso = false;</span>
+<span class="nc" id="L319">						boolean pesquisaSucesso = false;</span>
+<span class="nc" id="L320">						boolean cancelamentoSucesso = false;</span>
+<span class="nc" id="L321">						opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L322" title="All 5 branches missed.">						switch (opcao) {</span>
+							// Realizar venda
+							case 1:
+<span class="nc" id="L325">								vendaSucesso = moduloVenda.realizarVenda(sc);</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">								if (vendaSucesso) {</span>
+<span class="nc" id="L327">									System.out.println(&quot;Venda registrada com sucesso!&quot;);</span>
+<span class="nc" id="L328">									break;</span>
+								}
+<span class="nc" id="L330">								System.out.println(&quot;A venda falhou!&quot;);</span>
+<span class="nc" id="L331">								break;</span>
+							// Pesquisar vendas
+							case 2:
+<span class="nc" id="L334">								pesquisaSucesso = moduloVenda.pesquisarVendas(sc);</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">								if (pesquisaSucesso == false) {</span>
+<span class="nc" id="L336">									System.out.println(&quot;A pesquisa falhou!&quot;);</span>
+								}
+								break;
+							// Cancelar venda realizada
+							case 3:
+<span class="nc" id="L341">								cancelamentoSucesso = moduloVenda.cancelarVenda(sc);</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">								if (cancelamentoSucesso == false) {</span>
+<span class="nc" id="L343">									System.out.println(&quot;O cancelamento falhou!&quot;);</span>
+								}
+<span class="nc" id="L345">								System.out.println(&quot;Venda cancelada com sucesso!&quot;);</span>
+<span class="nc" id="L346">								break;</span>
+							// Retornar ao menu anterior
+							case 0:
+<span class="nc" id="L349">								break loopMenuVendas;</span>
+							default:
+<span class="nc" id="L351">								System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+								break;
+						}
+<span class="nc" id="L354">					}</span>
+					break;
+				// TEST: Gerar relatório mensal
+				case 5:
+<span class="nc" id="L358">					System.out.println(Historico.gerarRelatorio());</span>
+<span class="nc" id="L359">					break;</span>
+				// Sair do sistema
+				case 0:
+<span class="nc" id="L362">					System.out.println(&quot;Até logo!&quot;);</span>
+<span class="nc" id="L363">					JsonWriter.salvarEstoque();</span>
+<span class="nc" id="L364">					JsonWriter.salvarHistorico();</span>
+<span class="nc" id="L365">					sc.close();</span>
+<span class="nc" id="L366">					break loopMain;</span>
+				default:
+<span class="nc" id="L368">					System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+					break;
+			}
+<span class="nc" id="L371">		}</span>
+<span class="nc" id="L372">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

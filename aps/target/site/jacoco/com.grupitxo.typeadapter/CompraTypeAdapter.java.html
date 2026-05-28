@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompraTypeAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.typeadapter</a> &gt; <span class="el_source">CompraTypeAdapter.java</span></div><h1>CompraTypeAdapter.java</h1><pre class="source lang-java linenums">package com.grupitxo.typeadapter;
+
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import com.grupitxo.enums.Pagamento;
+import com.grupitxo.enums.Status;
+import com.grupitxo.classes.Compra;
+import com.grupitxo.classes.Produto;
+
+<span class="nc" id="L14">public class CompraTypeAdapter extends TypeAdapter&lt;Compra&gt; {</span>
+
+    @Override
+    public void write(JsonWriter out, Compra compra) throws IOException {
+<span class="nc" id="L18">        out.beginObject();</span>
+        // Serializa apenas os campos essenciais (não gera automaticamente)
+<span class="nc" id="L20">        out.name(&quot;idCliente&quot;).value(compra.getIdCliente());</span>
+<span class="nc" id="L21">        out.name(&quot;idFuncionario&quot;).value(compra.getIdFuncionario());</span>
+<span class="nc" id="L22">        out.name(&quot;desconto&quot;).value(compra.getDesconto());</span>
+<span class="nc" id="L23">        out.name(&quot;pagamento&quot;).value(compra.getPagamento().name());</span>
+<span class="nc" id="L24">        out.name(&quot;status&quot;).value(compra.getStatus().name());</span>
+        
+        // Serializa apenas IDs e quantidades dos produtos
+<span class="nc" id="L27">        out.name(&quot;produtos&quot;).beginArray();</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        for (Compra.CompraProduto cp : compra.getListaCompraProdutos()) {</span>
+<span class="nc" id="L29">            out.beginObject();</span>
+<span class="nc" id="L30">            out.name(&quot;idProduto&quot;).value(cp.getProduto().getIdProduto());</span>
+<span class="nc" id="L31">            out.name(&quot;quantidade&quot;).value(cp.getQtdComprada());</span>
+<span class="nc" id="L32">            out.name(&quot;descontoProduto&quot;).value(cp.getDesconto());</span>
+<span class="nc" id="L33">            out.endObject();</span>
+<span class="nc" id="L34">        }</span>
+<span class="nc" id="L35">        out.endArray();</span>
+        
+<span class="nc" id="L37">        out.endObject();</span>
+<span class="nc" id="L38">    }</span>
+
+    @Override
+    public Compra read(JsonReader in) throws IOException {
+<span class="nc" id="L42">        in.beginObject();</span>
+        
+<span class="nc" id="L44">        int idCliente = 0;</span>
+<span class="nc" id="L45">        int idFuncionario = 0;</span>
+<span class="nc" id="L46">        double desconto = 1;</span>
+<span class="nc" id="L47">        Pagamento pagamento = null;</span>
+<span class="nc" id="L48">        Status status = Status.EM_PROCESSAMENTO;</span>
+<span class="nc" id="L49">        List&lt;Compra.CompraProduto&gt; produtos = new ArrayList&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        while (in.hasNext()) {</span>
+<span class="nc" id="L52">            String fieldName = in.nextName();</span>
+<span class="nc bnc" id="L53" title="All 7 branches missed.">            switch (fieldName) {</span>
+                case &quot;idCliente&quot;:
+<span class="nc" id="L55">                    idCliente = in.nextInt();</span>
+<span class="nc" id="L56">                    break;</span>
+                case &quot;idFuncionario&quot;:
+<span class="nc" id="L58">                    idFuncionario = in.nextInt();</span>
+<span class="nc" id="L59">                    break;</span>
+                case &quot;desconto&quot;:
+<span class="nc" id="L61">                    desconto = in.nextDouble();</span>
+<span class="nc" id="L62">                    break;</span>
+                case &quot;pagamento&quot;:
+<span class="nc" id="L64">                    pagamento = Pagamento.valueOf(in.nextString());</span>
+<span class="nc" id="L65">                    break;</span>
+                case &quot;status&quot;:
+<span class="nc" id="L67">                    status = Status.valueOf(in.nextString());</span>
+<span class="nc" id="L68">                    break;</span>
+                case &quot;produtos&quot;:
+<span class="nc" id="L70">                    in.beginArray();</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                    while (in.hasNext()) {</span>
+<span class="nc" id="L72">                        in.beginObject();</span>
+<span class="nc" id="L73">                        int idProduto = 0;</span>
+<span class="nc" id="L74">                        int quantidade = 0;</span>
+<span class="nc" id="L75">                        double descontoProduto = 1;</span>
+                        
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                        while (in.hasNext()) {</span>
+<span class="nc" id="L78">                            String prodField = in.nextName();</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">                            switch (prodField) {</span>
+                                case &quot;idProduto&quot;:
+<span class="nc" id="L81">                                    idProduto = in.nextInt();</span>
+<span class="nc" id="L82">                                    break;</span>
+                                case &quot;quantidade&quot;:
+<span class="nc" id="L84">                                    quantidade = in.nextInt();</span>
+<span class="nc" id="L85">                                    break;</span>
+                                case &quot;descontoProduto&quot;:
+<span class="nc" id="L87">                                    descontoProduto = in.nextDouble();</span>
+<span class="nc" id="L88">                                    break;</span>
+                                default:
+<span class="nc" id="L90">                                    in.skipValue();</span>
+                            }
+<span class="nc" id="L92">                        }</span>
+                        // Busca o produto na lista existente
+<span class="nc" id="L94">                        Produto produto = Produto.getProdutoById(idProduto);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                        if (produto != null) {</span>
+<span class="nc" id="L96">                            produtos.add(new Compra.CompraProduto(produto, quantidade, descontoProduto, false));</span>
+                        }
+<span class="nc" id="L98">                        in.endObject();</span>
+<span class="nc" id="L99">                    }</span>
+<span class="nc" id="L100">                    in.endArray();</span>
+<span class="nc" id="L101">                    break;</span>
+                default:
+<span class="nc" id="L103">                    in.skipValue(); // Ignora campos calculados automaticamente</span>
+            }
+<span class="nc" id="L105">        }</span>
+<span class="nc" id="L106">        in.endObject();</span>
+        
+        // Cria a compra (os campos calculados serão gerados automaticamente)
+<span class="nc" id="L109">        Compra compra = new Compra(idCliente, idFuncionario, new ArrayList&lt;&gt;(produtos), desconto, pagamento, false);</span>
+<span class="nc" id="L110">        compra.setStatus(status);</span>
+<span class="nc" id="L111">        return compra;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">JsonReader.java</span></div><h1>JsonReader.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
+import com.grupitxo.typeadapter.CompraTypeAdapter;
+import com.grupitxo.typeadapter.HistoricoTypeAdapter;
+import com.grupitxo.typeadapter.ProdutoTypeAdapter;
+
+<span class="nc" id="L14">public class JsonReader {</span>
+<span class="nc" id="L15">	private static Gson gson = new GsonBuilder()</span>
+<span class="nc" id="L16">	        .registerTypeAdapter(Produto.class, new ProdutoTypeAdapter())</span>
+<span class="nc" id="L17">			.registerTypeAdapter(Compra.class, new CompraTypeAdapter())</span>
+<span class="nc" id="L18">			.registerTypeAdapter(new TypeToken&lt;ArrayList&lt;Compra&gt;&gt;(){}.getType(), </span>
+                    new HistoricoTypeAdapter(new CompraTypeAdapter()))
+<span class="nc" id="L20">			.create();</span>
+	
+	// Métodos para carregar objetos em memória	
+	public static void carregarHistorico() {
+<span class="nc" id="L24">		try (FileReader fr = new FileReader(&quot;historico.json&quot;)) {</span>
+<span class="nc" id="L25">			Compra[] historico = gson.fromJson(fr, Compra[].class);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">			for (Compra compra : historico) {</span>
+<span class="nc" id="L27">				Historico.addToHistorico(compra);</span>
+			}
+<span class="nc" id="L29">		} catch (IOException | JsonIOException e) {</span>
+<span class="nc" id="L30">		}</span>
+<span class="nc" id="L31">	}</span>
+	
+	public static void carregarEstoque() {
+<span class="nc" id="L34">		try (FileReader fr = new FileReader(&quot;estoque.json&quot;)) {</span>
+<span class="nc" id="L35">			Produto[] estoque = gson.fromJson(fr, Produto[].class);</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">			for (Produto produto : estoque) {</span>
+<span class="nc" id="L37">				Produto.addToListaProdutos(produto);</span>
+			}
+<span class="nc" id="L39">		} catch (IOException | JsonIOException e) {</span>
+<span class="nc" id="L40">		}</span>
+<span class="nc" id="L41">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

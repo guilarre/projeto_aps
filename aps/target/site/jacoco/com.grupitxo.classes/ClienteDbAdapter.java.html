@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteDbAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">ClienteDbAdapter.java</span></div><h1>ClienteDbAdapter.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+// CRUD no BD para Cliente
+public class ClienteDbAdapter implements ClienteStorageStrategy {
+    private Connection conn;
+
+<span class="nc" id="L14">    public ClienteDbAdapter(Connection conn) {</span>
+<span class="nc" id="L15">        this.conn = conn;</span>
+<span class="nc" id="L16">    }</span>
+
+    // CREATE
+    @Override
+    public boolean salvar(Cliente c) {
+<span class="nc" id="L21">        String sql = &quot;INSERT INTO clientes (nome, cpf, telefone, email, preferencia_comunicacao, endereco, aniversario, genero) &quot; +</span>
+                     &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?);&quot;;
+
+<span class="nc" id="L24">        try (PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L25">            stmt.setString(1, c.getNome());</span>
+<span class="nc" id="L26">            stmt.setString(2, c.getCpf());</span>
+<span class="nc" id="L27">            stmt.setString(3, c.getTelefone());</span>
+<span class="nc" id="L28">            stmt.setString(4, c.getEmail());</span>
+<span class="nc" id="L29">            stmt.setString(5, c.getPreferenciaComunicacao());</span>
+<span class="nc" id="L30">            stmt.setString(6, c.getEndereco());</span>
+<span class="nc" id="L31">            stmt.setString(7, c.getAniversario());</span>
+<span class="nc" id="L32">            stmt.setString(8, c.getGenero());</span>
+
+<span class="nc" id="L34">            stmt.executeUpdate();</span>
+<span class="nc" id="L35">            return true;</span>
+<span class="nc" id="L36">        } catch (SQLException e) {</span>
+<span class="nc" id="L37">            e.printStackTrace();</span>
+<span class="nc" id="L38">            return false;</span>
+        }
+    }
+
+    // READ - buscar todos
+    @Override
+    public List&lt;Cliente&gt; buscarTodos() {
+<span class="nc" id="L45">        List&lt;Cliente&gt; listaClientes = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L46">        String sql = &quot;SELECT * FROM clientes;&quot;;</span>
+
+<span class="nc" id="L48">        try (PreparedStatement stmt = conn.prepareStatement(sql);</span>
+<span class="nc" id="L49">             ResultSet rs = stmt.executeQuery()) {</span>
+
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L52">                listaClientes.add(mapearResultSet(rs));</span>
+            }
+<span class="nc" id="L54">        } catch (SQLException e) {</span>
+<span class="nc" id="L55">            System.err.println(&quot;ERRO! Não foi possível buscar todos os clientes: &quot; + e.getMessage());</span>
+<span class="nc" id="L56">        }</span>
+
+<span class="nc" id="L58">        return listaClientes;</span>
+    }
+
+    // READ - buscar por ID
+    @Override
+    public Cliente buscarPorId(int id) {
+<span class="nc" id="L64">        String sql = &quot;SELECT * FROM clientes WHERE id == ?;&quot;;</span>
+<span class="nc" id="L65">        Cliente clienteEncontrado = null;</span>
+
+<span class="nc" id="L67">        try (PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L68">            stmt.setInt(1, id);</span>
+
+<span class="nc" id="L70">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L72">                    clienteEncontrado = mapearResultSet(rs);</span>
+                }
+            }
+<span class="nc" id="L75">        } catch (SQLException e) {</span>
+<span class="nc" id="L76">            System.err.println(&quot;ERRO! Não foi possível buscar cliente por ID: &quot; + e.getMessage());</span>
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">        return clienteEncontrado;</span>
+    }
+
+    // READ - buscar por nome (LIKE)
+    @Override
+    public Cliente buscarPorNome(String nomeBusca) {
+<span class="nc" id="L84">        String sql = &quot;SELECT * FROM clientes WHERE nome LIKE ?;&quot;;</span>
+<span class="nc" id="L85">        Cliente clienteEncontrado = null;</span>
+
+<span class="nc" id="L87">        try (PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L88">            stmt.setString(1, &quot;%&quot; + nomeBusca + &quot;%&quot;);</span>
+
+<span class="nc" id="L90">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L92">                    clienteEncontrado = mapearResultSet(rs);</span>
+                }
+            }
+<span class="nc" id="L95">        } catch (SQLException e) {</span>
+<span class="nc" id="L96">            System.err.println(&quot;ERRO! Não foi possível buscar cliente por nome: &quot; + e.getMessage());</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">        return clienteEncontrado;</span>
+    }
+
+    // UPDATE
+    @Override
+    public Cliente atualizar(Cliente c) {
+<span class="nc" id="L104">        String sql = &quot;UPDATE clientes SET &quot; +</span>
+                     &quot;nome = ?, &quot; +
+                     &quot;cpf = ?, &quot; +
+                     &quot;telefone = ?, &quot; +
+                     &quot;email = ?, &quot; +
+                     &quot;preferencia_comunicacao = ?, &quot; +
+                     &quot;endereco = ?, &quot; +
+                     &quot;aniversario = ?, &quot; +
+                     &quot;genero = ? &quot; +
+                     &quot;WHERE id = ?;&quot;;
+
+<span class="nc" id="L115">        try (PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L116">            stmt.setString(1, c.getNome());</span>
+<span class="nc" id="L117">            stmt.setString(2, c.getCpf());</span>
+<span class="nc" id="L118">            stmt.setString(3, c.getTelefone());</span>
+<span class="nc" id="L119">            stmt.setString(4, c.getEmail());</span>
+<span class="nc" id="L120">            stmt.setString(5, c.getPreferenciaComunicacao());</span>
+<span class="nc" id="L121">            stmt.setString(6, c.getEndereco());</span>
+<span class="nc" id="L122">            stmt.setString(7, c.getAniversario());</span>
+<span class="nc" id="L123">            stmt.setString(8, c.getGenero());</span>
+<span class="nc" id="L124">            stmt.setInt(9, c.getIdCliente());</span>
+
+<span class="nc" id="L126">            int linhasAfetadas = stmt.executeUpdate();</span>
+
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (linhasAfetadas &gt; 0) {</span>
+<span class="nc" id="L129">                return c;</span>
+            }
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L132">            System.err.println(&quot;ERRO! Não foi possível atualizar o cliente: &quot; + e.getMessage());</span>
+<span class="nc" id="L133">        }</span>
+<span class="nc" id="L134">        return null;</span>
+    }
+
+    // DELETE
+    @Override
+    public boolean remover(Cliente c) {
+<span class="nc" id="L140">        String sql = &quot;DELETE FROM clientes WHERE id = ?;&quot;;</span>
+
+<span class="nc" id="L142">        try (PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L143">            stmt.setInt(1, c.getIdCliente());</span>
+
+<span class="nc" id="L145">            int linhasAfetadas = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            if (linhasAfetadas &gt; 0) {</span>
+<span class="nc" id="L147">                return true;</span>
+            }
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L150">            System.err.println(&quot;ERRO! Não foi possível remover o cliente: &quot; + e.getMessage());</span>
+<span class="nc" id="L151">        }</span>
+<span class="nc" id="L152">        return false;</span>
+    }
+
+    // Auxiliares
+    @Override
+    public int getQtd() {
+<span class="nc" id="L158">        String sql = &quot;SELECT COUNT(*) FROM clientes;&quot;;</span>
+<span class="nc" id="L159">        try (PreparedStatement stmt = conn.prepareStatement(sql);</span>
+<span class="nc" id="L160">             ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (rs.next()) {</span>
+<span class="nc" id="L162">                return rs.getInt(1);</span>
+            }
+<span class="nc bnc" id="L164" title="All 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L165">            e.printStackTrace();</span>
+<span class="nc" id="L166">        }</span>
+<span class="nc" id="L167">        return 0;</span>
+    }
+
+    private Cliente mapearResultSet(ResultSet rs) throws SQLException {
+<span class="nc" id="L171">        int idDb        = rs.getInt(&quot;id&quot;);</span>
+<span class="nc" id="L172">        String nome     = rs.getString(&quot;nome&quot;);</span>
+<span class="nc" id="L173">        String cpf      = rs.getString(&quot;cpf&quot;);</span>
+<span class="nc" id="L174">        String telefone = rs.getString(&quot;telefone&quot;);</span>
+<span class="nc" id="L175">        String email    = rs.getString(&quot;email&quot;);</span>
+<span class="nc" id="L176">        String prefCom  = rs.getString(&quot;preferencia_comunicacao&quot;);</span>
+<span class="nc" id="L177">        String endereco = rs.getString(&quot;endereco&quot;);</span>
+<span class="nc" id="L178">        String aniv     = rs.getString(&quot;aniversario&quot;);</span>
+<span class="nc" id="L179">        String genero   = rs.getString(&quot;genero&quot;);</span>
+
+<span class="nc" id="L181">        return new Cliente(idDb, nome, cpf, telefone, email, prefCom, endereco, aniv, genero);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -16,7 +16,8 @@ import com.grupitxo.enums.Cargo;
 public class FuncionarioViewFactoryTest {
     @Test
     public void testeCriarFuncionarioViaConsole() {
-        String entradaSimulada = "Gui\n" + //nome
+        // inserindo um \n antes por causa do limpador do buffer que roda aqui
+        String entradaSimulada = "\nGui\n" + //nome
                                  "12312312311\n" + //cpf
                                  "81999999999\n" + //telefone
                                  "gui@gui\n" + //email

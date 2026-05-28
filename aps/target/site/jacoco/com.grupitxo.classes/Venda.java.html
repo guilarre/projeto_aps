@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Venda.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Venda.java</span></div><h1>Venda.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.util.Scanner;
+
+
+public class Venda {
+	// adaptações enquanto não termina a refatoração
+	private FuncionarioController funcionarioController;
+	private ClienteController clienteController;
+	
+	// Construtor pra Venda (vai deixar de ser tudo static pq precisa passar os view factory e adapter pela main)
+<span class="nc" id="L12">	public Venda(FuncionarioController funcionarioController, ClienteController clienteController) {</span>
+<span class="nc" id="L13">		this.funcionarioController = funcionarioController;</span>
+<span class="nc" id="L14">		this.clienteController = clienteController;</span>
+<span class="nc" id="L15">	}</span>
+
+	// Métodos retornam true/false e Main gerencia mensagem de erro/sucesso
+	public boolean realizarVenda(Scanner sc) {
+<span class="nc" id="L19">		Cliente cliente = clienteController.selecionarClienteParaAcao(sc);</span>
+<span class="nc bnc" id="L20" title="All 2 branches missed.">		if (cliente == null) {</span>
+<span class="nc" id="L21">			return false;</span>
+		}
+<span class="nc" id="L23">		Funcionario funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">		if (funcionario == null) {</span>
+<span class="nc" id="L25">			return false;</span>
+		}
+<span class="nc" id="L27">		Compra compra = Compra.getCompraNova(cliente, funcionario);</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">		if (compra != null) {</span>
+<span class="nc" id="L29">			return true;</span>
+		}
+<span class="nc" id="L31">		return false;</span>
+	}
+	
+	public boolean pesquisarVendas(Scanner sc) {
+		// Setup
+		int opcao;
+		// Prompts
+		loopPesquisarVendas: while (true) {
+<span class="nc" id="L39">			System.out.println(StringsMenu.menuPesquisarVendas);</span>
+<span class="nc" id="L40">			opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L41" title="All 5 branches missed.">			switch (opcao) {</span>
+				// Pesquisar por cliente
+				case 1:
+<span class="nc" id="L44">					Cliente cliente = clienteController.selecionarClienteParaAcao(sc);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">					if (cliente != null) {</span>
+<span class="nc" id="L46">						System.out.println(Historico.getHistoricoCliente(cliente.getIdCliente()));</span>
+					} else {
+<span class="nc" id="L48">						return false;</span>
+					}
+<span class="nc" id="L50">					return true;</span>
+				// Pesquisar por funcionário
+				case 2:
+<span class="nc" id="L53">					Funcionario funcionario = funcionarioController.selecionarFuncionarioParaAcao(sc);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">					if (funcionario != null) {</span>
+<span class="nc" id="L55">						System.out.println(Historico.getHistoricoFuncionario(funcionario.getIdFuncionario()));</span>
+					} else {
+<span class="nc" id="L57">						return false;</span>
+					}
+<span class="nc" id="L59">					return true;</span>
+				// Exibir todas as vendas
+				case 3:
+<span class="nc" id="L62">					String historico = Historico.exibirHistoricoCompleto();</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">					if (historico != null) {</span>
+<span class="nc" id="L64">						System.out.println(historico);</span>
+					} else {
+<span class="nc" id="L66">						return false;</span>
+					}
+<span class="nc" id="L68">					return true;</span>
+				// Retornar ao menu anterior
+				case 0:
+<span class="nc" id="L71">					break loopPesquisarVendas;</span>
+				default:
+<span class="nc" id="L73">					System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L74">					break;</span>
+			}
+		}
+<span class="nc" id="L77">		return false;</span>
+	}
+	
+	public boolean cancelarVenda(Scanner sc) {
+		// Pegar índice da compra a cancelar
+<span class="nc" id="L82">		System.out.println(&quot;Digite o índice da venda que deseja cancelar: &quot;);</span>
+<span class="nc" id="L83">		int idx = sc.nextInt();</span>
+		// Pegar compra a cancelar para confirmar
+<span class="nc" id="L85">		String compraACancelar = Historico.getCompraByIndex(idx - 1);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		if (compraACancelar == null) {</span>
+<span class="nc" id="L87">			System.out.println(String.format(&quot;ERRO! Índice '%d' não existe&quot;, idx));</span>
+<span class="nc" id="L88">			return false;</span>
+		}
+		// Confirmar operação
+<span class="nc" id="L91">		System.out.println(String.format(&quot;&quot;&quot;</span>
+				
+Você tem certeza que deseja cancelar a compra a seguir?
+
+Compra:
+%s
+
+Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, compraACancelar));
+<span class="nc" id="L99">		char confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">		if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L101">			Historico.cancelarCompra(idx - 1);</span>
+<span class="nc" id="L102">			return true;</span>
+		} else {
+<span class="nc" id="L104">			return false;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

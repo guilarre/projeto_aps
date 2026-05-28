@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteViewFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">ClienteViewFactory.java</span></div><h1>ClienteViewFactory.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.util.Scanner;
+
+<span class="nc" id="L5">public class ClienteViewFactory {</span>
+    public Cliente criarClienteNovo(Scanner sc) {
+        // Limpa o buffer do Scanner (importante após ler nextInt ou nextDouble)
+<span class="nc bnc" id="L8" title="All 2 branches missed.">        if (sc.hasNextLine()) {</span>
+<span class="nc" id="L9">			sc.nextLine();</span>
+        }
+		// Prompts
+<span class="nc" id="L12">		System.out.println(&quot;Digite o nome do cliente: &quot;);</span>
+<span class="nc" id="L13">		String nome = sc.nextLine();</span>
+<span class="nc" id="L14">		System.out.println(&quot;Digite o cpf do cliente: &quot;);</span>
+<span class="nc" id="L15">		String cpf = sc.nextLine();</span>
+<span class="nc" id="L16">		System.out.println(&quot;Digite o telefone do cliente: &quot;);</span>
+<span class="nc" id="L17">		String telefone = sc.nextLine();</span>
+<span class="nc" id="L18">		System.out.println(&quot;Digite o email do cliente: &quot;);</span>
+<span class="nc" id="L19">		String email = sc.nextLine();</span>
+<span class="nc" id="L20">		System.out.println(&quot;Digite a preferência de comunicação do cliente: &quot;);</span>
+<span class="nc" id="L21">		String preferenciaComunicacao = sc.nextLine();</span>
+<span class="nc" id="L22">		System.out.println(&quot;Digite o endereco residencial do cliente: &quot;);</span>
+<span class="nc" id="L23">		String endereco = sc.nextLine();</span>
+<span class="nc" id="L24">		System.out.println(&quot;Digite o aniversário do cliente (e.g. 12/12/2012): &quot;);</span>
+<span class="nc" id="L25">		String aniversario = sc.nextLine();</span>
+<span class="nc" id="L26">		System.out.println(&quot;Digite o gênero do cliente: &quot;);</span>
+<span class="nc" id="L27">		String genero = sc.nextLine();</span>
+
+        // Limpa o buffer do Scanner (importante após ler nextInt ou nextDouble)
+        // if (sc.hasNextLine()) {
+        //     sc.nextLine();
+        // }
+
+<span class="nc" id="L34">        System.out.println(&quot;Cliente criado em memória com sucesso!&quot;);</span>
+        
+        // Retorna o objeto limpo. Ele não é salvo no banco AQUI. Isso é papel do Controller.
+        try {
+<span class="nc" id="L38">            Cliente cliente = new Cliente(nome, cpf, telefone, email, preferenciaComunicacao, endereco, aniversario, genero);</span>
+<span class="nc" id="L39">            System.out.println(&quot;Cliente criado em memória com sucesso!&quot;);</span>
+<span class="nc" id="L40">            return cliente;</span>
+<span class="nc" id="L41">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L42">            System.err.println(&quot;ERRO ao criar cliente: &quot; + e.getMessage());</span>
+<span class="nc" id="L43">            return null; </span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

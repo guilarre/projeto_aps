@@ -1,0 +1,34 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+aps,com.grupitxo.classes,ProdutoDbAdapter,11,78,3,3,6,19,3,3,0,3
+aps,com.grupitxo.classes,Main,530,0,83,0,197,0,60,0,2,0
+aps,com.grupitxo.classes,Historico,401,0,32,0,76,0,26,0,10,0
+aps,com.grupitxo.classes,JsonReader.new TypeToken() {...},3,0,0,0,1,0,1,0,1,0
+aps,com.grupitxo.classes,FuncionarioView,70,72,10,10,24,25,12,9,6,5
+aps,com.grupitxo.classes,Compra.CompraProduto,169,0,6,0,30,0,12,0,9,0
+aps,com.grupitxo.classes,FuncionarioController,242,29,27,1,76,9,25,2,4,2
+aps,com.grupitxo.classes,Compra,537,0,39,0,151,0,52,0,26,0
+aps,com.grupitxo.classes,StringsMenu,3,29,0,0,1,14,1,1,1,1
+aps,com.grupitxo.classes,ClienteDbAdapter,353,0,20,0,97,0,19,0,9,0
+aps,com.grupitxo.classes,Pessoa,66,144,14,12,25,40,20,16,7,16
+aps,com.grupitxo.classes,JsonWriter,60,0,0,0,21,0,5,0,5,0
+aps,com.grupitxo.classes,ClienteViewFactory,85,0,2,0,26,0,3,0,2,0
+aps,com.grupitxo.classes,Venda,151,0,21,0,48,0,16,0,4,0
+aps,com.grupitxo.classes,ClienteView,128,0,18,0,44,0,19,0,10,0
+aps,com.grupitxo.classes,FuncionarioDbAdapter,133,372,11,11,39,89,11,8,1,7
+aps,com.grupitxo.classes,JsonReader,94,0,4,0,20,0,6,0,4,0
+aps,com.grupitxo.classes,DatabaseConfig,12,39,1,1,4,14,2,2,1,2
+aps,com.grupitxo.classes,Cliente,86,0,0,0,8,0,4,0,4,0
+aps,com.grupitxo.classes,Produto,674,58,55,1,178,19,56,8,18,8
+aps,com.grupitxo.classes,ClienteController,233,0,21,0,75,0,21,0,6,0
+aps,com.grupitxo.classes,Funcionario,9,118,1,1,3,15,2,7,1,7
+aps,com.grupitxo.classes,FuncionarioViewFactory,20,104,6,3,10,33,6,2,0,2
+aps,com.grupitxo.classes,JsonWriter.new TypeToken() {...},3,0,0,0,1,0,1,0,1,0
+aps,com.grupitxo.typeadapter,ProdutoTypeAdapter,155,0,10,0,47,0,11,0,3,0
+aps,com.grupitxo.typeadapter,CompraTypeAdapter,237,0,21,0,68,0,17,0,3,0
+aps,com.grupitxo.typeadapter,HistoricoTypeAdapter,52,0,4,0,17,0,5,0,3,0
+aps,com.grupitxo.enums,Pagamento,33,0,0,0,6,0,1,0,1,0
+aps,com.grupitxo.enums,Categoria,0,33,0,0,0,6,0,1,0,1
+aps,com.grupitxo.enums,Genero,33,0,0,0,6,0,1,0,1,0
+aps,com.grupitxo.enums,Cargo,0,27,0,0,0,5,0,1,0,1
+aps,com.grupitxo.enums,Status,21,0,0,0,4,0,1,0,1,0
+aps,com.grupitxo.enums,PrefCom,15,0,0,0,3,0,1,0,1,0

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Compra.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Compra.java</span></div><h1>Compra.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.grupitxo.enums.Pagamento;
+import com.grupitxo.enums.Status;
+
+public class Compra {
+	// Contador para autoincrementar idCompra
+<span class="nc" id="L14">	private static AtomicInteger count = new AtomicInteger(0);</span>
+	private final int idCompra;
+	private int idCliente;
+	private int idFuncionario;
+	private LocalDateTime dataHora;
+<span class="nc" id="L19">	private ArrayList&lt;CompraProduto&gt; listaCompraProdutos = null;</span>
+<span class="nc" id="L20">	private double subtotal = 0;</span>
+	private double desconto;
+<span class="nc" id="L22">	private double total = 0;</span>
+<span class="nc" id="L23">	private Pagamento pagamento = null;</span>
+<span class="nc" id="L24">	private Status status = Status.EM_PROCESSAMENTO;</span>
+	
+<span class="nc" id="L26">	public Compra(int idCliente, int idFuncionario, ArrayList&lt;CompraProduto&gt; listaCompraProdutos, double desconto, Pagamento pagamento, boolean autoAdd) {</span>
+<span class="nc" id="L27">		idCompra = count.incrementAndGet();</span>
+<span class="nc" id="L28">		this.idCliente = idCliente;</span>
+<span class="nc" id="L29">		this.idFuncionario = idFuncionario;</span>
+<span class="nc" id="L30">		dataHora = LocalDateTime.now();</span>
+<span class="nc" id="L31">		this.listaCompraProdutos = listaCompraProdutos;</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">		for (CompraProduto compraProduto : listaCompraProdutos) {</span>
+<span class="nc" id="L33">			subtotal += compraProduto.getTotal();</span>
+<span class="nc" id="L34">		}</span>
+		// autoAdd é usado como flag pra indicar se foi criado pelo gson
+<span class="nc bnc" id="L36" title="All 2 branches missed.">		if (autoAdd == true) {</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">			if (desconto != 0) {</span>
+				// Math.abs para deixar positivo
+<span class="nc" id="L39">				this.desconto = Math.abs(desconto - 100) / 100;</span>
+<span class="nc" id="L40">				this.total = subtotal * desconto;</span>
+			} else {			
+<span class="nc" id="L42">				this.total = subtotal;</span>
+			}
+		} else {
+<span class="nc bnc" id="L45" title="All 2 branches missed.">			if (desconto != 0) {</span>
+<span class="nc" id="L46">				this.desconto = desconto;</span>
+<span class="nc" id="L47">				this.total = subtotal * desconto;</span>
+			} else {			
+<span class="nc" id="L49">				this.total = subtotal;</span>
+			}
+		}
+<span class="nc" id="L52">		this.pagamento = pagamento;</span>
+		// Alterando qtd em estoque após sucesso
+<span class="nc" id="L54">		Compra.decrementarEstoque(this.listaCompraProdutos);</span>
+<span class="nc" id="L55">		status = Status.SUCESSO;</span>
+		// Salvar compra no histórico
+<span class="nc bnc" id="L57" title="All 2 branches missed.">		if (autoAdd) {			</span>
+<span class="nc" id="L58">			Historico.addToHistorico(this);</span>
+		}
+<span class="nc" id="L60">	}</span>
+	
+	// Getters/setters
+	public int getIdCompra() {
+<span class="nc" id="L64">		return idCompra;</span>
+	}
+	public int getIdCliente() {
+<span class="nc" id="L67">		return idCliente;</span>
+	}
+	public void setIdCliente(int idCliente) {
+<span class="nc" id="L70">		this.idCliente = idCliente;</span>
+<span class="nc" id="L71">	}</span>
+	public int getIdFuncionario() {
+<span class="nc" id="L73">		return idFuncionario;</span>
+	}
+	public void setIdFuncionario(int idFuncionario) {
+<span class="nc" id="L76">		this.idFuncionario = idFuncionario;</span>
+<span class="nc" id="L77">	}</span>
+	public String getDataHora() {
+<span class="nc" id="L79">		String formatterString = &quot;dd/MM/yyyy&quot;;</span>
+<span class="nc" id="L80">		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterString);</span>
+<span class="nc" id="L81">		return dataHora.format(formatter);</span>
+	}
+	public LocalDateTime getObjetoDataHora() {
+<span class="nc" id="L84">		return dataHora;</span>
+	}
+	public double getSubtotal() {
+<span class="nc" id="L87">		return subtotal;</span>
+	}
+	public double getDesconto() {
+<span class="nc" id="L90">		return desconto;</span>
+	}
+	public void setDesconto(double desconto) {
+<span class="nc" id="L93">		this.desconto = desconto;</span>
+		// Atualizando o total após alterar desconto
+<span class="nc" id="L95">		total = subtotal * this.desconto;</span>
+<span class="nc" id="L96">	}</span>
+	public double getTotal() {
+<span class="nc" id="L98">		return total;</span>
+	}
+	public Pagamento getPagamento() {
+<span class="nc" id="L101">		return pagamento;</span>
+	}
+	public void setPagamento(Pagamento pagamento) {
+<span class="nc" id="L104">		this.pagamento = pagamento;</span>
+<span class="nc" id="L105">	}</span>
+	public static String getPagamentoValue(Pagamento pagamento) {
+<span class="nc bnc" id="L107" title="All 6 branches missed.">		switch (pagamento) {</span>
+			case A_VISTA:
+<span class="nc" id="L109">				return &quot;À vista&quot;;</span>
+			case PIX:
+<span class="nc" id="L111">				return &quot;Pix&quot;;</span>
+			case DEBITO:
+<span class="nc" id="L113">				return &quot;Débito&quot;;</span>
+			case CREDITO:
+<span class="nc" id="L115">				return &quot;Crédito&quot;;</span>
+			case CHEQUE:
+<span class="nc" id="L117">				return &quot;Cheque&quot;;</span>
+			default:
+<span class="nc" id="L119">				return &quot;ERRO! Forma de pagamento ainda não registrada&quot;;</span>
+		}
+	}
+	public Status getStatus() {
+<span class="nc" id="L123">		return status;</span>
+	}
+	public void setStatus(Status status) {
+<span class="nc" id="L126">		this.status = status;</span>
+<span class="nc" id="L127">	}</span>
+	public static String getStatusValue(Status status) {
+<span class="nc bnc" id="L129" title="All 4 branches missed.">		switch (status) {</span>
+			case CANCELADA:
+<span class="nc" id="L131">				return &quot;Cancelada&quot;;</span>
+			case EM_PROCESSAMENTO:
+<span class="nc" id="L133">				return &quot;Em processamento&quot;;</span>
+			case SUCESSO:
+<span class="nc" id="L135">				return &quot;Sucesso&quot;;</span>
+			default:
+<span class="nc" id="L137">				return &quot;ERRO! Status ainda não registrado&quot;;</span>
+		}
+	}
+	
+	// CREATE e retornar objeto Compra novo (usado pela Main)
+	public static ArrayList&lt;CompraProduto&gt; getCompraProdutoNovo() {
+<span class="nc" id="L143">		ArrayList&lt;CompraProduto&gt; listaCompraProdutos = new ArrayList&lt;CompraProduto&gt;();</span>
+<span class="nc" id="L144">		Produto produtoSelecionado = null;</span>
+<span class="nc" id="L145">		double desconto = 1;</span>
+<span class="nc" id="L146">		int qtdComprada = 0;</span>
+<span class="nc" id="L147">		CompraProduto compraProduto = null;</span>
+		
+<span class="nc" id="L149">		Scanner sc = new Scanner(System.in);</span>
+		loopSelecaoProdutos: while (true) {
+<span class="nc" id="L151">			String menuSelecionarProduto = &quot;&quot;&quot;</span>
+
+Selecione um ou mais produtos:
+
+[1] = Procurar produto por seu id
+[2] = Procurar produto por seu nome
+[3] = TERMINAR seleção de produtos
+
+[0] = Retornar ao menu anterior
+&quot;&quot;&quot;;
+<span class="nc" id="L161">			System.out.println(menuSelecionarProduto);</span>
+<span class="nc" id="L162">			int opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L163" title="All 5 branches missed.">			switch (opcao) {</span>
+				case 1:
+					// Selecionando o produto pelo id
+<span class="nc" id="L166">					System.out.println(&quot;Digite o id do produto:&quot;);</span>
+<span class="nc" id="L167">					int idProduto = sc.nextInt();</span>
+<span class="nc" id="L168">					produtoSelecionado = Produto.getProdutoById(idProduto);</span>
+<span class="nc" id="L169">					System.out.println(String.format(&quot;Produto selecionado:\n\n%s&quot;, produtoSelecionado));</span>
+					// Desconto
+<span class="nc" id="L171">					System.out.println(&quot;Digite o desconto DO PRODUTO em porcentagem, se aplicável (e.g. 12,5).\nSe não houver desconto, digite 0:&quot;);</span>
+<span class="nc" id="L172">					desconto = sc.nextDouble();</span>
+					// Qtd comprada
+<span class="nc" id="L174">					System.out.println(&quot;Digite a quantidade que será comprada:&quot;);</span>
+<span class="nc" id="L175">					qtdComprada = sc.nextInt();</span>
+<span class="nc" id="L176">					compraProduto = new Compra.CompraProduto(produtoSelecionado, qtdComprada, desconto, true);</span>
+<span class="nc" id="L177">					listaCompraProdutos.add(compraProduto);</span>
+<span class="nc" id="L178">					break;</span>
+				case 2:
+					// Selecionando o produto pelo nome
+<span class="nc" id="L181">					System.out.println(&quot;Digite o nome do produto:&quot;);</span>
+					// HACK: tem que dar esse nextLine() antes pra apagar o \n que sobra do nextInt()
+<span class="nc" id="L183">					sc.nextLine();</span>
+<span class="nc" id="L184">					String nomeProduto = sc.nextLine();</span>
+<span class="nc" id="L185">					produtoSelecionado = Produto.getProdutoByNome(nomeProduto);</span>
+<span class="nc" id="L186">					System.out.println(String.format(&quot;Produto selecionado:\n\n%s&quot;, produtoSelecionado));</span>
+					// Desconto
+<span class="nc" id="L188">					System.out.println(&quot;Digite o desconto DO PRODUTO em porcentagem, se aplicável (e.g. 12,5).\nSe não houver desconto, digite 0:&quot;);</span>
+<span class="nc" id="L189">					desconto = sc.nextDouble();</span>
+					// Qtd comprada
+<span class="nc" id="L191">					System.out.println(&quot;Digite a quantidade que será comprada:&quot;);</span>
+<span class="nc" id="L192">					qtdComprada = sc.nextInt();</span>
+<span class="nc" id="L193">					compraProduto = new Compra.CompraProduto(produtoSelecionado, qtdComprada, desconto, true);</span>
+<span class="nc" id="L194">					listaCompraProdutos.add(compraProduto);</span>
+<span class="nc" id="L195">					break;</span>
+				case 3:
+<span class="nc" id="L197">					return listaCompraProdutos;</span>
+				case 0:
+<span class="nc" id="L199">					System.out.println(&quot;Operação cancelada!&quot;);</span>
+<span class="nc" id="L200">					break loopSelecaoProdutos;</span>
+				default:
+<span class="nc" id="L202">					System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+					break;
+			}
+<span class="nc" id="L205">		}</span>
+<span class="nc" id="L206">		return null;</span>
+	}
+	public static Compra getCompraNova(Cliente cliente, Funcionario funcionario) {
+		// listaCompraProdutos
+<span class="nc" id="L210">		ArrayList&lt;CompraProduto&gt; listaCompraProdutos = Compra.getCompraProdutoNovo();</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">		if (listaCompraProdutos == null) {</span>
+<span class="nc" id="L212">			return null;</span>
+		}
+<span class="nc" id="L214">		Scanner sc = new Scanner(System.in);</span>
+		// Desconto
+<span class="nc" id="L216">		System.out.println(&quot;Digite o desconto DA COMPRA em porcentagem, se aplicável (e.g. 12,5).\nSe não houver desconto, digite 0:&quot;);</span>
+<span class="nc" id="L217">		double desconto = sc.nextDouble();</span>
+		// Pagamento (forma de pagamento)
+<span class="nc" id="L219">		Pagamento pagamento = null;</span>
+<span class="nc" id="L220">		System.out.println(&quot;&quot;&quot;</span>
+
+Escolha a forma de pagamento:
+
+[1] = À vista
+[2] = Pix
+[3] = Débito
+[4] = Crédito
+[5] = Cheque
+
+&quot;&quot;&quot;);
+<span class="nc" id="L231">		int opcaoPagamento = sc.nextInt();</span>
+<span class="nc bnc" id="L232" title="All 6 branches missed.">		switch (opcaoPagamento) {</span>
+			case 1:
+<span class="nc" id="L234">				pagamento = Pagamento.A_VISTA;</span>
+<span class="nc" id="L235">				break;</span>
+			case 2:
+<span class="nc" id="L237">				pagamento = Pagamento.PIX;</span>
+<span class="nc" id="L238">				break;</span>
+			case 3:
+<span class="nc" id="L240">				pagamento = Pagamento.DEBITO;</span>
+<span class="nc" id="L241">				break;</span>
+			case 4:
+<span class="nc" id="L243">				pagamento = Pagamento.CREDITO;</span>
+<span class="nc" id="L244">				break;</span>
+			case 5:
+<span class="nc" id="L246">				pagamento = Pagamento.CHEQUE;</span>
+<span class="nc" id="L247">				break;</span>
+			default:
+<span class="nc" id="L249">				System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+				break;
+		}
+		// Criar e retornar objeto Compra
+<span class="nc" id="L253">		Compra compra = new Compra(cliente.getIdCliente(), funcionario.getIdFuncionario(), listaCompraProdutos, desconto, pagamento, true);</span>
+<span class="nc" id="L254">		return compra;</span>
+	}
+	
+	// Métodos para listaCompraProdutos
+	public ArrayList&lt;CompraProduto&gt; getListaCompraProdutos() {
+<span class="nc" id="L259">		return listaCompraProdutos;</span>
+	}
+	public double getTotalListaCompraProdutos() {
+<span class="nc" id="L262">		double total = 0;</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">		for (CompraProduto compraProduto : listaCompraProdutos) {</span>
+<span class="nc" id="L264">			total += compraProduto.getTotal();</span>
+<span class="nc" id="L265">		}</span>
+<span class="nc" id="L266">		return total;</span>
+	}
+	// Chamado após compra ter sucesso
+	public static void decrementarEstoque(ArrayList&lt;CompraProduto&gt; listaCompraProdutos) {
+<span class="nc bnc" id="L270" title="All 2 branches missed.">		for (CompraProduto compraProduto : listaCompraProdutos) {</span>
+<span class="nc" id="L271">			Produto produto = compraProduto.getProduto();</span>
+<span class="nc" id="L272">			int qtdEmEstoqueAtual = produto.getQtdEstoque();</span>
+<span class="nc" id="L273">			int qtdComprada = compraProduto.getQtdComprada();</span>
+<span class="nc" id="L274">			int qtdEmEstoqueNova = qtdEmEstoqueAtual - qtdComprada;</span>
+<span class="nc" id="L275">			produto.setQtdEstoque(qtdEmEstoqueNova);</span>
+<span class="nc" id="L276">		}</span>
+<span class="nc" id="L277">	}</span>
+	// Chamado após compra ser cancelada
+	public static void incrementarEstoque(ArrayList&lt;CompraProduto&gt; listaCompraProdutos) {
+<span class="nc bnc" id="L280" title="All 2 branches missed.">		for (CompraProduto compraProduto : listaCompraProdutos) {</span>
+<span class="nc" id="L281">			Produto produto = compraProduto.getProduto();</span>
+<span class="nc" id="L282">			int qtdEmEstoqueAtual = produto.getQtdEstoque();</span>
+<span class="nc" id="L283">			int qtdComprada = compraProduto.getQtdComprada();</span>
+<span class="nc" id="L284">			int qtdEmEstoqueNova = qtdEmEstoqueAtual + qtdComprada;</span>
+<span class="nc" id="L285">			produto.setQtdEstoque(qtdEmEstoqueNova);</span>
+<span class="nc" id="L286">		}</span>
+<span class="nc" id="L287">	}</span>
+	
+	@Override 
+	public String toString() {
+<span class="nc" id="L291">		return String.format(&quot;&quot;&quot;</span>
+
+Id da compra: '%d'
+
+Id do cliente: '%d'
+Id do Funcionário: '%d'
+Data e hora da compra: '%s'
+Subtotal: '%f'
+Desconto: '%f'
+Total: R$ %.2f
+Forma de pagamento: '%s'
+Status: '%s'
+
+<span class="nc" id="L304">&quot;&quot;&quot;, this.getIdCompra(), this.getIdCliente(), this.getIdFuncionario(), this.getDataHora(), this.getSubtotal(), this.getDesconto(), this.getTotal(), Compra.getPagamentoValue(pagamento), Compra.getStatusValue(status));</span>
+	}
+	
+	public static class CompraProduto {
+		private Produto produto;
+<span class="nc" id="L309">		private int qtdComprada = 0;</span>
+		private double desconto;
+<span class="nc" id="L311">		private double total = 0;</span>
+		
+<span class="nc" id="L313">		public CompraProduto(Produto produto, int qtdComprada, double desconto, boolean autoAdd) {</span>
+<span class="nc" id="L314">			this.produto = produto;</span>
+<span class="nc" id="L315">			this.qtdComprada = qtdComprada;</span>
+			// autoAdd é usado como flag pra indicar se foi criado pelo gson
+<span class="nc bnc" id="L317" title="All 2 branches missed.">			if (autoAdd == true) {</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">				if (desconto != 0) {</span>
+					// Math.abs para deixar positivo
+<span class="nc" id="L320">					this.desconto = Math.abs(desconto - 100) / 100;</span>
+<span class="nc" id="L321">					this.total = produto.getValor() * qtdComprada * desconto;</span>
+				} else {
+<span class="nc" id="L323">					this.total = produto.getValor() * qtdComprada;</span>
+				}
+			} else {
+<span class="nc bnc" id="L326" title="All 2 branches missed.">				if (desconto != 0) {</span>
+<span class="nc" id="L327">					this.desconto = desconto;</span>
+<span class="nc" id="L328">					this.total = produto.getValor() * qtdComprada * desconto;</span>
+				} else {
+<span class="nc" id="L330">					this.total = produto.getValor() * qtdComprada;</span>
+				}
+			}
+<span class="nc" id="L333">		}</span>
+		
+		//Getters/Setters
+		public Produto getProduto() {
+<span class="nc" id="L337">			return produto;</span>
+		}
+		public void setProduto(Produto produto) {
+<span class="nc" id="L340">			this.produto = produto;</span>
+			// Atualizando total após alterar produto
+<span class="nc" id="L342">			total = this.produto.getValor() * qtdComprada * desconto;</span>
+<span class="nc" id="L343">		}</span>
+		public int getQtdComprada() {
+<span class="nc" id="L345">			return qtdComprada;</span>
+		}
+		public void setQtdComprada(int qtdComprada) {
+<span class="nc" id="L348">			this.qtdComprada = qtdComprada;</span>
+			// Atualizando total após alterar qtdComprada
+<span class="nc" id="L350">			total = produto.getValor() * this.qtdComprada * desconto;</span>
+<span class="nc" id="L351">		}</span>
+		public double getDesconto() {
+<span class="nc" id="L353">			return desconto;</span>
+		}
+		public void setDesconto(int desconto) {
+<span class="nc" id="L356">			this.desconto = desconto;</span>
+			// Atualizando total após alterar o produto
+<span class="nc" id="L358">			total = produto.getValor() * qtdComprada * this.desconto;</span>
+<span class="nc" id="L359">		}</span>
+		public double getTotal() {
+<span class="nc" id="L361">			return total;</span>
+		}
+
+		@Override
+		public String toString () {
+<span class="nc" id="L366">			return String.format(&quot;&quot;&quot;</span>
+					
+Id do Produto: '%d'
+Nome do Produto: '%s'
+Quantidade: '%d'
+Desconto: '%f'
+Total: R$ %.2f
+
+<span class="nc" id="L374">&quot;&quot;&quot;, this.getProduto().getIdProduto(), this.getProduto().getNomeProduto(), this.getQtdComprada(), this.getDesconto(), this.getTotal());</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

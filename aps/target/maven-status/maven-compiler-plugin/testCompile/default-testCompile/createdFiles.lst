@@ -1,6 +1,6 @@
 com/grupitxo/testes/FuncionarioControllerTest.class
 com/grupitxo/testes/FuncionarioDbAdapterFake.class
-com/grupitxo/testes/FuncionarioDbAdapterTest.class
 com/grupitxo/testes/FuncionarioViewFactoryTest.class
+com/grupitxo/testes/FuncionarioDbAdapterTest.class
 com/grupitxo/testes/ProdutoDbAdapterTest.class
 com/grupitxo/testes/FuncionarioViewTest.class

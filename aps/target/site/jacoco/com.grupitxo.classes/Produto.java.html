@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Produto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">Produto.java</span></div><h1>Produto.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.grupitxo.enums.Categoria;
+
+public class Produto {
+<span class="fc" id="L10">	private static ArrayList&lt;Produto&gt; listaProdutos = new ArrayList&lt;Produto&gt;();</span>
+<span class="fc" id="L11">	private static AtomicInteger count = new AtomicInteger(0);</span>
+	private int idProduto;
+	private String sku;
+	private String nomeProduto;
+	private String descricao;
+	private double valor;
+<span class="fc" id="L17">	private Categoria categoria = null;</span>
+	private int qtdEstoque;
+	
+<span class="fc" id="L20">	public Produto(String sku, String nomeProduto, String descricao, double valor, Categoria categoria, int qtdEstoque, boolean autoAdd) {</span>
+<span class="fc" id="L21">		idProduto = count.incrementAndGet();</span>
+<span class="fc" id="L22">		this.sku = sku;</span>
+<span class="fc" id="L23">		this.nomeProduto= nomeProduto;</span>
+<span class="fc" id="L24">		this.descricao = descricao;</span>
+<span class="fc" id="L25">		this.valor = valor;</span>
+<span class="fc" id="L26">		this.categoria = categoria;</span>
+<span class="fc" id="L27">		this.qtdEstoque = qtdEstoque;</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">		if (autoAdd) { //</span>
+<span class="nc" id="L29">			listaProdutos.add(this);</span>
+		}
+<span class="fc" id="L31">	}</span>
+	
+	// Getters/setters
+	public int getIdProduto() {
+<span class="nc" id="L35">		return idProduto;</span>
+	}
+	public String getSku() {
+<span class="fc" id="L38">		return sku;</span>
+	}
+	public void setSku(String sku) {
+<span class="nc" id="L41">		this.sku = sku;</span>
+<span class="nc" id="L42">	}</span>
+	public String getNomeProduto() {
+<span class="fc" id="L44">		return nomeProduto;</span>
+	}
+	public void setNomeProduto(String nomeProduto) {
+<span class="nc" id="L47">		this.nomeProduto = nomeProduto;</span>
+<span class="nc" id="L48">	}</span>
+	public String getDescricao() {
+<span class="fc" id="L50">		return descricao;</span>
+	}
+	public void setDescricao(String descricao) {
+<span class="nc" id="L53">		this.descricao = descricao;</span>
+<span class="nc" id="L54">	}</span>
+	public double getValor() {
+<span class="fc" id="L56">		return valor;</span>
+	}
+	public void setValor(double valor) {
+<span class="nc" id="L59">		this.valor = valor;</span>
+<span class="nc" id="L60">	}</span>
+	public Categoria getCategoria() {
+<span class="fc" id="L62">		return categoria;</span>
+	}
+	public void setCategoria(Categoria categoria) {
+<span class="nc" id="L65">		this.categoria = categoria;</span>
+<span class="nc" id="L66">	}</span>
+	// CHECK: talvez dê pra tirar isso e usar getCategoria().toString
+	public static String getCategoriaValue(Categoria categoria) {
+<span class="nc bnc" id="L69" title="All 6 branches missed.">		switch (categoria) {</span>
+			case CALCA:
+<span class="nc" id="L71">				return &quot;Calça&quot;;</span>
+			case SAIA:
+<span class="nc" id="L73">				return &quot;Saia&quot;;</span>
+			case JAQUETA:
+<span class="nc" id="L75">				return &quot;Jaqueta&quot;;</span>
+			case BLUSA:
+<span class="nc" id="L77">				return &quot;Blusa&quot;;</span>
+			case SHORTS:
+<span class="nc" id="L79">				return &quot;Shorts&quot;;</span>
+			default:
+<span class="nc" id="L81">				return &quot;ERRO! Categoria ainda não registrada&quot;;</span>
+		}
+	}
+	public static String getTodasCategorias() {
+<span class="nc" id="L85">		StringBuilder stringBuilder = new StringBuilder();</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		for (Categoria categoria : Categoria.values()) {</span>
+<span class="nc" id="L87">			stringBuilder.append(Produto.getCategoriaValue(categoria) + &quot;\n&quot;);</span>
+		}
+<span class="nc" id="L89">		return String.valueOf(stringBuilder);</span>
+	}
+	public int getQtdEstoque() {
+<span class="fc" id="L92">		return qtdEstoque;</span>
+	}
+	public void setQtdEstoque(int qtdEstoque) {
+<span class="nc" id="L95">		this.qtdEstoque = qtdEstoque;</span>
+<span class="nc" id="L96">	}</span>
+
+	// CRUD para produto
+	// CREATE e retornar objeto Produto novo (usado pela Main)
+	public static Produto getProdutoNovo() {
+		// Setup
+<span class="nc" id="L102">		Scanner sc = new Scanner(System.in);</span>
+<span class="nc" id="L103">		Categoria categoria = null;</span>
+<span class="nc" id="L104">		Produto produtoNovo = null;</span>
+		// Prompts
+<span class="nc" id="L106">		System.out.println(&quot;Digite o código de estoque (SKU): &quot;);</span>
+<span class="nc" id="L107">		String sku = sc.nextLine();</span>
+<span class="nc" id="L108">		System.out.println(&quot;Digite o nome do produto: &quot;);</span>
+<span class="nc" id="L109">		String nomeProduto = sc.nextLine();</span>
+<span class="nc" id="L110">		System.out.println(&quot;Digite a descrição do produto: &quot;);</span>
+<span class="nc" id="L111">		String descricao = sc.nextLine();</span>
+<span class="nc" id="L112">		System.out.println(&quot;Digite o valor do produto (e.g. 12,50): &quot;);</span>
+<span class="nc" id="L113">		double valor = sc.nextDouble();</span>
+<span class="nc" id="L114">		System.out.println(&quot;&quot;&quot;</span>
+
+Selecione a categoria do produto:
+
+[1] = Calça
+[2] = Saia
+[3] = Jaqueta
+[4] = Blusa
+[5] = Shorts
+&quot;&quot;&quot;);
+<span class="nc" id="L124">		int opcaoCategoria = sc.nextInt();</span>
+<span class="nc bnc" id="L125" title="All 6 branches missed.">		switch (opcaoCategoria) {</span>
+			case 1:
+<span class="nc" id="L127">				categoria = Categoria.CALCA;</span>
+<span class="nc" id="L128">				break;</span>
+			case 2:
+<span class="nc" id="L130">				categoria = Categoria.SAIA;</span>
+<span class="nc" id="L131">				break;</span>
+			case 3:
+<span class="nc" id="L133">				categoria = Categoria.JAQUETA;</span>
+<span class="nc" id="L134">				break;</span>
+			case 4:
+<span class="nc" id="L136">				categoria = Categoria.BLUSA;</span>
+<span class="nc" id="L137">				break;</span>
+			case 5:
+<span class="nc" id="L139">				categoria = Categoria.SHORTS;</span>
+				break;
+		}
+<span class="nc" id="L142">		System.out.println(&quot;Digite a quantidade em estoque do produto: &quot;);</span>
+<span class="nc" id="L143">		int qtdEstoque = sc.nextInt();</span>
+<span class="nc" id="L144">		produtoNovo = new Produto(sku, nomeProduto, descricao, valor, categoria, qtdEstoque, true);</span>
+<span class="nc" id="L145">		System.out.println(String.format(&quot;O produto foi adicionado com sucesso!\n\n%s&quot;, produtoNovo.toString()));</span>
+<span class="nc" id="L146">		return produtoNovo;</span>
+	}
+	// READ para selecionar objeto Produto
+	public static Produto getProdutoById(int idProduto) {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">		for (Produto produto : Produto.getListaProdutos()) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">			if (produto.getIdProduto() == idProduto) {</span>
+<span class="nc" id="L152">				return produto;</span>
+			}
+<span class="nc" id="L154">		}</span>
+<span class="nc" id="L155">		System.err.println(&quot;ERRO! Produto inexistente&quot;);</span>
+<span class="nc" id="L156">		return null;</span>
+	}
+	public static Produto getProdutoByNome(String nomeProduto) {
+<span class="nc bnc" id="L159" title="All 2 branches missed.">		for (Produto produto : Produto.getListaProdutos()) {</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">			if (produto.getNomeProduto().equals(nomeProduto)) {</span>
+<span class="nc" id="L161">				return produto;</span>
+			}
+<span class="nc" id="L163">		}</span>
+<span class="nc" id="L164">		System.err.println(&quot;ERRO! Produto inexistente&quot;);</span>
+<span class="nc" id="L165">		return null;</span>
+	}
+	public static Produto selecionarProduto() {
+		// Setup
+<span class="nc" id="L169">		Produto produto = null;</span>
+<span class="nc" id="L170">		Scanner sc = new Scanner(System.in);</span>
+		// Prompts
+<span class="nc" id="L172">		System.out.println(StringsMenu.menuSelecionarProduto);</span>
+<span class="nc" id="L173">		int opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L174" title="All 4 branches missed.">		switch (opcao) {</span>
+			case 1:
+<span class="nc" id="L176">				System.out.println(&quot;Digite o id do produto: &quot;);</span>
+<span class="nc" id="L177">				int idProduto = sc.nextInt();</span>
+<span class="nc" id="L178">				produto = Produto.getProdutoById(idProduto);</span>
+<span class="nc" id="L179">				break;</span>
+			case 2:
+<span class="nc" id="L181">				System.out.println(&quot;Digite o nome do produto: &quot;);</span>
+				// HACK: tem que dar esse nextLine() antes pra apagar o \n que sobra do nextInt()
+<span class="nc" id="L183">				sc.nextLine();</span>
+<span class="nc" id="L184">				String nomeProduto = sc.nextLine();</span>
+<span class="nc" id="L185">				produto = Produto.getProdutoByNome(nomeProduto);</span>
+<span class="nc" id="L186">				break;</span>
+			case 0:
+<span class="nc" id="L188">				break;</span>
+			default:
+<span class="nc" id="L190">				System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+				break;
+		}
+<span class="nc" id="L193">		return produto;</span>
+	}
+	// UPDATE
+	public static Produto modificarProduto(Produto produtoAModificar, int opcao) {
+		// Setup
+<span class="nc" id="L198">		Scanner sc = new Scanner(System.in);</span>
+<span class="nc" id="L199">		Produto produtoModificado = null;</span>
+<span class="nc" id="L200">		char confirmacao = 'n';</span>
+		// Prompts
+<span class="nc bnc" id="L202" title="All 8 branches missed.">		switch (opcao) {</span>
+			// SKU
+			case 1:
+<span class="nc" id="L205">				String skuAtual = produtoAModificar.getSku();</span>
+<span class="nc" id="L206">				System.out.println(&quot;Digite o SKU novo: &quot;);</span>
+<span class="nc" id="L207">				String skuNovo = sc.nextLine();</span>
+<span class="nc" id="L208">				System.out.println(String.format(&quot;&quot;&quot;</span>
+						
+Você tem certeza que deseja modificar o SKU do produto?
+	
+Produto:
+%s
+	
+SKU atual: %s
+SKU novo: %s
+	
+Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produtoAModificar, skuAtual, skuNovo));
+<span class="nc" id="L219">				confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">				if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L221">					produtoAModificar.setSku(skuNovo);</span>
+<span class="nc" id="L222">					produtoModificado = Produto.getProdutoById(produtoAModificar.getIdProduto());</span>
+<span class="nc" id="L223">					return produtoModificado;</span>
+				} else {
+<span class="nc" id="L225">					return produtoModificado;</span>
+				}
+			// Nome do produto
+			case 2:
+<span class="nc" id="L229">				String nomeAtual = produtoAModificar.getNomeProduto();</span>
+<span class="nc" id="L230">				System.out.println(&quot;Digite o nome novo: &quot;);</span>
+<span class="nc" id="L231">				String nomeNovo = sc.nextLine();</span>
+<span class="nc" id="L232">				System.out.println(String.format(&quot;&quot;&quot;</span>
+						
+Você tem certeza que deseja modificar o nome do produto?
+
+Produto:
+%s
+
+Nome atual: %s
+Nome novo: %s
+
+Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produtoAModificar, nomeAtual, nomeNovo));
+<span class="nc" id="L243">				confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">				if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L245">					produtoAModificar.setNomeProduto(nomeNovo);</span>
+<span class="nc" id="L246">					produtoModificado = Produto.getProdutoById(produtoAModificar.getIdProduto());</span>
+<span class="nc" id="L247">					return produtoModificado;</span>
+				} else {
+<span class="nc" id="L249">					return produtoModificado;</span>
+				}
+			// Descrição
+			case 3:
+<span class="nc" id="L253">				String descricaoAtual = produtoAModificar.getDescricao();</span>
+<span class="nc" id="L254">				System.out.println(&quot;Digite a descrição nova: &quot;);</span>
+<span class="nc" id="L255">				String descricaoNova = sc.nextLine();</span>
+<span class="nc" id="L256">				System.out.println(String.format(&quot;&quot;&quot;</span>
+						
+Você tem certeza que deseja modificar a descrição do produto?
+
+Produto:
+%s
+
+Descrição atual: %s
+Descrição nova: %s
+
+Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produtoAModificar, descricaoAtual, descricaoNova));
+<span class="nc" id="L267">				confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">				if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L269">					produtoAModificar.setDescricao(descricaoNova);</span>
+<span class="nc" id="L270">					produtoModificado = Produto.getProdutoById(produtoAModificar.getIdProduto());</span>
+<span class="nc" id="L271">					return produtoModificado;</span>
+				} else {
+<span class="nc" id="L273">					return produtoModificado;</span>
+				}
+			case 4:
+<span class="nc" id="L276">				double valorAtual = produtoAModificar.getValor();</span>
+<span class="nc" id="L277">				System.out.println(&quot;Digite o valor novo (e.g. 12,50): &quot;);</span>
+<span class="nc" id="L278">				double valorNovo = sc.nextDouble();</span>
+<span class="nc" id="L279">				System.out.println(String.format(&quot;&quot;&quot;</span>
+						
+Você tem certeza que deseja modificar o valor do produto?
+
+Produto:
+%s
+
+Valor atual: %s
+Valor novo: %s
+
+<span class="nc" id="L289">Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produtoAModificar, valorAtual, valorNovo));</span>
+<span class="nc" id="L290">				confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">				if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L292">					produtoAModificar.setValor(valorNovo);</span>
+<span class="nc" id="L293">					produtoModificado = Produto.getProdutoById(produtoAModificar.getIdProduto());</span>
+<span class="nc" id="L294">					return produtoModificado;</span>
+				} else {
+<span class="nc" id="L296">					return produtoModificado;</span>
+				}
+			// Categoria
+			case 5:
+<span class="nc" id="L300">				String categoriaAtual = Produto.getCategoriaValue(produtoAModificar.getCategoria());</span>
+<span class="nc" id="L301">				Categoria categoriaNova = null;</span>
+<span class="nc" id="L302">				System.out.println(&quot;&quot;&quot;</span>
+
+Selecione a categoria nova:
+
+[1] = Calça
+[2] = Saia
+[3] = Jaqueta
+[4] = Blusa
+[5] = Shorts
+&quot;&quot;&quot;);
+<span class="nc" id="L312">				int opcaoCategoriaNova = sc.nextInt();</span>
+<span class="nc bnc" id="L313" title="All 6 branches missed.">				switch (opcaoCategoriaNova) {</span>
+					case 1:
+<span class="nc" id="L315">						categoriaNova = Categoria.CALCA;</span>
+<span class="nc" id="L316">						break;</span>
+					case 2:
+<span class="nc" id="L318">						categoriaNova = Categoria.SAIA;</span>
+<span class="nc" id="L319">						break;</span>
+					case 3:
+<span class="nc" id="L321">						categoriaNova = Categoria.JAQUETA;</span>
+<span class="nc" id="L322">						break;</span>
+					case 4:
+<span class="nc" id="L324">						categoriaNova = Categoria.BLUSA;</span>
+<span class="nc" id="L325">						break;</span>
+					case 5:
+<span class="nc" id="L327">						categoriaNova = Categoria.SHORTS;</span>
+<span class="nc" id="L328">						break;</span>
+					default:
+<span class="nc" id="L330">						System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+						break;
+				}
+<span class="nc" id="L333">				System.out.println(String.format(&quot;&quot;&quot;</span>
+						
+Você tem certeza que deseja modificar a categoria do produto?
+
+Produto:
+%s
+
+Categoria atual: %s
+Categoria nova: %s
+
+Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produtoAModificar, categoriaAtual, categoriaNova));
+<span class="nc" id="L344">				confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">				if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L346">					produtoAModificar.setCategoria(categoriaNova);</span>
+<span class="nc" id="L347">					produtoModificado = Produto.getProdutoById(produtoAModificar.getIdProduto());</span>
+<span class="nc" id="L348">					return produtoModificado;</span>
+				} else {
+<span class="nc" id="L350">					return produtoModificado;</span>
+				}
+			// Quantidade em estoque
+			case 6:
+<span class="nc" id="L354">				int qtdAtual = produtoAModificar.getQtdEstoque();</span>
+<span class="nc" id="L355">				System.out.println(&quot;Digite a quantidade nova: &quot;);</span>
+<span class="nc" id="L356">				int qtdNova = sc.nextInt();</span>
+<span class="nc" id="L357">				System.out.println(String.format(&quot;&quot;&quot;</span>
+
+Você tem certeza que deseja modificar a quantidade do produto?
+
+Produto:
+%s
+
+Quantidade atual: %s
+Quantidade nova: %s
+
+<span class="nc" id="L367">Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produtoAModificar, qtdAtual, qtdNova));</span>
+<span class="nc" id="L368">				confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L369" title="All 2 branches missed.">				if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L370">					produtoAModificar.setQtdEstoque(qtdNova);</span>
+<span class="nc" id="L371">					produtoModificado = Produto.getProdutoById(produtoAModificar.getIdProduto());</span>
+<span class="nc" id="L372">					return produtoModificado;</span>
+				} else {
+<span class="nc" id="L374">					return produtoModificado;</span>
+				}
+			case 0:
+<span class="nc" id="L377">				return produtoModificado;</span>
+			default:
+<span class="nc" id="L379">				System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L380">				return produtoModificado;</span>
+		}
+	}
+	// REMOVE
+	public static void removerProduto(Produto produto) {
+		// Confirmar operação
+<span class="nc" id="L386">		Scanner sc = new Scanner(System.in);</span>
+<span class="nc" id="L387">		System.out.println(String.format(&quot;&quot;&quot;</span>
+Você tem certeza que deseja remover o produto a seguir?
+
+Produto:
+%s
+
+Se sim, digite 's', se não digite 'n' (CUIDADO: Essa operação não pode ser revertida):&quot;&quot;&quot;, produto));
+<span class="nc" id="L394">		char confirmacao = sc.next().charAt(0);</span>
+<span class="nc bnc" id="L395" title="All 2 branches missed.">		if (Character.toLowerCase(confirmacao) == 's') {</span>
+<span class="nc" id="L396">			listaProdutos.remove(produto.getIdProduto() - 1);</span>
+<span class="nc" id="L397">			System.out.println(&quot;Produto foi removido com sucesso!&quot;);</span>
+		} else {
+<span class="nc" id="L399">			System.out.println(&quot;Operação cancelada!&quot;);</span>
+		}
+<span class="nc" id="L401">	}</span>
+	
+	// Métodos para listaProdutos (usados para carregar/atualizar estoque em JsonReader e Main)
+	public static ArrayList&lt;Produto&gt; getListaProdutos() {
+<span class="nc" id="L405">		return listaProdutos;</span>
+	}
+	public static void addToListaProdutos(Produto produto) {
+<span class="nc" id="L408">		listaProdutos.add(produto);</span>
+<span class="nc" id="L409">		count = new AtomicInteger(listaProdutos.size());</span>
+<span class="nc" id="L410">	}</span>
+
+	// toString()
+	@Override
+	public String toString() {
+<span class="nc" id="L415">		return String.format(&quot;&quot;&quot;</span>
+
+Id do produto: '%d'
+
+SKU: %s
+Nome: %s
+Descrição: %s
+Valor: R$ %.2f
+Categoria: '%s'
+Quantidade em estoque: %d.
+
+<span class="nc" id="L426">&quot;&quot;&quot;, this.getIdProduto(), this.getSku(), this.getNomeProduto(), this.getDescricao(), this.getValor(), Produto.getCategoriaValue(categoria), getQtdEstoque());</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

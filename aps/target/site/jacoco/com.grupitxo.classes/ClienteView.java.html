@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">ClienteView.java</span></div><h1>ClienteView.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.util.List;
+import java.util.Scanner;
+
+<span class="nc" id="L6">public class ClienteView {</span>
+    // mostra tds os clientes da lista na tela
+    public void exibirListaClientes(List&lt;Cliente&gt; lista) {
+<span class="nc bnc" id="L9" title="All 4 branches missed.">        if (lista == null || lista.isEmpty()) {</span>
+<span class="nc" id="L10">            System.out.println(&quot;Não há clientes registrados no sistema.&quot;);</span>
+<span class="nc" id="L11">            return;</span>
+        }
+<span class="nc bnc" id="L13" title="All 2 branches missed.">        for (Cliente cliente : lista) {</span>
+<span class="nc" id="L14">            System.out.println(cliente.toString());</span>
+<span class="nc" id="L15">        }</span>
+<span class="nc" id="L16">    }</span>
+    
+    public void exibirCliente(Cliente cliente) {
+<span class="nc bnc" id="L19" title="All 2 branches missed.">        if (cliente == null) {</span>
+<span class="nc" id="L20">            System.out.println(&quot;ERRO Cliente não encontrado ou registro inválido.&quot;);</span>
+<span class="nc" id="L21">            return;</span>
+        }
+<span class="nc" id="L23">        System.out.println(&quot;\n=== DETALHES DO CLIENTE ===&quot;);</span>
+<span class="nc" id="L24">        System.out.println(cliente);</span>
+<span class="nc" id="L25">        System.out.println(&quot;===============================\n&quot;);</span>
+<span class="nc" id="L26">    }</span>
+    
+    public int mostrarMenuSelecao(Scanner sc) {
+<span class="nc" id="L29">        System.out.println(StringsMenu.menuSelecionarCliente);</span>
+<span class="nc" id="L30">        int opcao = sc.nextInt();</span>
+        // NOTE: tem que dar esse nextLine() antes pra apagar o \n que sobra do nextInt() no buffer!
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (sc.hasNextLine()) {</span>
+<span class="nc" id="L33">            sc.nextLine(); </span>
+        }
+<span class="nc" id="L35">        return opcao;</span>
+    } 
+    
+    public int pedirIdParaBusca(Scanner sc) {
+<span class="nc" id="L39">        System.out.println(&quot;Digite o id do cliente:&quot;);</span>
+<span class="nc" id="L40">        int id = sc.nextInt();</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (sc.hasNextLine()) {</span>
+<span class="nc" id="L42">            sc.nextLine();</span>
+        }
+<span class="nc" id="L44">        return id;</span>
+    }
+
+    public String pedirNomeParaBusca(Scanner sc) {
+<span class="nc" id="L48">        System.out.println(&quot;Digite o nome do cliente:&quot;);</span>
+<span class="nc" id="L49">        return sc.nextLine();</span>
+    }
+
+    // Métodos pro UPDATE
+    // pra pedir o campo a ser modificado
+    public int opcaoEdicao(Scanner sc) {
+        // chamando o menu na tela
+<span class="nc" id="L56">        System.out.println(StringsMenu.menuModificarCliente);</span>
+<span class="nc" id="L57">        int opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (sc.hasNextLine()) {</span>
+<span class="nc" id="L59">            sc.nextLine();</span>
+        }
+<span class="nc" id="L61">        return opcao;</span>
+    }
+    
+    // Método genérico para pedir textos (Nome, CPF, Email, etc.)
+    public String pedirNovoDadoTexto(Scanner sc, String campo) {
+<span class="nc" id="L66">        System.out.println(&quot;Digite o novo &quot; + campo + &quot;: &quot;);</span>
+<span class="nc" id="L67">        return sc.nextLine();</span>
+    }
+
+    // Método específico para pedir números (Salário)
+    public double pedirNovoDadoDecimal(Scanner sc, String campo) {
+<span class="nc" id="L72">        System.out.println(&quot;Digite o novo &quot; + campo + &quot; (e.g. 1500,00): &quot;);</span>
+<span class="nc" id="L73">        double valor = sc.nextDouble();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (sc.hasNextLine()) {</span>
+<span class="nc" id="L75">            sc.nextLine();</span>
+        }
+<span class="nc" id="L77">        return valor;</span>
+    }
+
+    // Método pra pedir confirmação do user
+    public int pedirConfirmacao(Scanner sc) {
+<span class="nc" id="L82">        System.out.println(&quot;Tem certeza que deseja continuar? Digite 1 se sim, 0 se deseja voltar:&quot;);</span>
+<span class="nc" id="L83">        int opcao = sc.nextInt();</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (sc.hasNextLine()) {</span>
+<span class="nc" id="L85">            sc.nextLine();</span>
+        }
+<span class="nc" id="L87">        return opcao;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aps</a> &gt; <a href="index.source.html" class="el_package">com.grupitxo.classes</a> &gt; <span class="el_source">ClienteController.java</span></div><h1>ClienteController.java</h1><pre class="source lang-java linenums">package com.grupitxo.classes;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class ClienteController {
+    private ClienteView view;
+    private ClienteViewFactory factory;
+    private ClienteStorageStrategy adapter;
+
+    // Construtor
+<span class="nc" id="L12">    public ClienteController(ClienteView view, ClienteViewFactory factory, ClienteStorageStrategy adapter) {</span>
+<span class="nc" id="L13">        this.view = view;</span>
+<span class="nc" id="L14">        this.factory = factory;</span>
+<span class="nc" id="L15">        this.adapter = adapter;</span>
+<span class="nc" id="L16">    }</span>
+
+    // SELEÇÃO E BUSCA
+    public Cliente selecionarClienteParaAcao(Scanner sc) {
+<span class="nc" id="L20">        int opcao = view.mostrarMenuSelecao(sc);</span>
+
+<span class="nc bnc" id="L22" title="All 4 branches missed.">        switch (opcao) {</span>
+            case 1:
+<span class="nc" id="L24">                int idBusca = view.pedirIdParaBusca(sc);</span>
+<span class="nc" id="L25">                return adapter.buscarPorId(idBusca); </span>
+
+            case 2:
+<span class="nc" id="L28">                String nomeBusca = view.pedirNomeParaBusca(sc);</span>
+<span class="nc" id="L29">                return adapter.buscarPorNome(nomeBusca); </span>
+
+            case 0:
+<span class="nc" id="L32">                System.out.println(&quot;Voltando ao menu anterior...&quot;);</span>
+<span class="nc" id="L33">                return null;</span>
+
+            default:
+<span class="nc" id="L36">                System.err.println(&quot;ERRO! Opção inválida&quot;);</span>
+<span class="nc" id="L37">                return null;</span>
+        }
+    }
+
+    public void rotinaListarClientes() {
+<span class="nc" id="L42">        List&lt;Cliente&gt; lista = adapter.buscarTodos();</span>
+<span class="nc" id="L43">        view.exibirListaClientes(lista);</span>
+<span class="nc" id="L44">    }</span>
+
+    // rotinas CREATE, UPDATE, DELETE
+    // CREATE
+    public void rotinaCriarCliente(Scanner sc) {
+        // A View/Factory tenta criar. Se der IllegalArgumentException vai retornar null
+<span class="nc" id="L50">        Cliente novoCliente = factory.criarClienteNovo(sc);</span>
+        
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (novoCliente != null) {</span>
+<span class="nc" id="L53">            adapter.salvar(novoCliente);</span>
+<span class="nc" id="L54">            System.out.println(&quot;Cliente registrado com sucesso!&quot;);</span>
+        } else {
+<span class="nc" id="L56">            System.out.println(&quot;ERRO! Cadastro cancelado devido a dados inválidos.&quot;);</span>
+        }
+<span class="nc" id="L58">    }</span>
+
+    // UPDATE
+    public void rotinaAtualizarCliente(Scanner sc) {
+        // seleciona o cliente p atualizar
+<span class="nc" id="L63">        Cliente alvo = selecionarClienteParaAcao(sc);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (alvo == null) {</span>
+<span class="nc" id="L65">            System.out.println(&quot;Nenhum cliente selecionado. Operação cancelada.&quot;);</span>
+<span class="nc" id="L66">            return;</span>
+        }
+
+        // Mostra os dados atuais para o usuário conferir
+<span class="nc" id="L70">        view.exibirCliente(alvo);</span>
+
+        // Mostra o menu e pega o que o usuário quer alterar
+<span class="nc" id="L73">        int opcao = view.opcaoEdicao(sc);</span>
+
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (opcao == 0) {</span>
+<span class="nc" id="L76">            System.out.println(&quot;Modificação cancelada. Voltando...&quot;);</span>
+<span class="nc" id="L77">            return;</span>
+        }
+
+        // Estrutura para capturar o dado, alterar no objeto (em memória) e mandar pro DB
+        try {
+<span class="nc bnc" id="L82" title="All 9 branches missed.">            switch (opcao) {</span>
+                case 1:
+<span class="nc" id="L84">                    String novoNome = view.pedirNovoDadoTexto(sc, &quot;nome&quot;);</span>
+<span class="nc" id="L85">                    alvo.setNome(novoNome);</span>
+<span class="nc" id="L86">                    break;</span>
+                case 2:
+<span class="nc" id="L88">                    String novoCpf = view.pedirNovoDadoTexto(sc, &quot;CPF&quot;);</span>
+<span class="nc" id="L89">                    alvo.setCpf(novoCpf);</span>
+<span class="nc" id="L90">                    break;</span>
+                case 3:
+<span class="nc" id="L92">                    String novoTelefone = view.pedirNovoDadoTexto(sc, &quot;telefone&quot;);</span>
+<span class="nc" id="L93">                    alvo.setTelefone(novoTelefone);</span>
+<span class="nc" id="L94">                    break;</span>
+                case 4:
+<span class="nc" id="L96">                    String novoEmail = view.pedirNovoDadoTexto(sc, &quot;email&quot;);</span>
+<span class="nc" id="L97">                    alvo.setEmail(novoEmail);</span>
+<span class="nc" id="L98">                    break;</span>
+                case 5:
+<span class="nc" id="L100">                    String novaPref = view.pedirNovoDadoTexto(sc, &quot;preferência de comunicação&quot;);</span>
+<span class="nc" id="L101">                    alvo.setPreferenciaComunicacao(novaPref);</span>
+<span class="nc" id="L102">                    break;</span>
+                case 6:
+<span class="nc" id="L104">                    String novoEndereco = view.pedirNovoDadoTexto(sc, &quot;endereço&quot;);</span>
+<span class="nc" id="L105">                    alvo.setEndereco(novoEndereco);</span>
+<span class="nc" id="L106">                    break;</span>
+                case 7:
+<span class="nc" id="L108">                    String novoAniversario = view.pedirNovoDadoTexto(sc, &quot;aniversário&quot;);</span>
+<span class="nc" id="L109">                    alvo.setAniversario(novoAniversario);</span>
+<span class="nc" id="L110">                    break;</span>
+                case 8:
+<span class="nc" id="L112">                    String novoGenero = view.pedirNovoDadoTexto(sc, &quot;gênero&quot;);</span>
+<span class="nc" id="L113">                    alvo.setGenero(novoGenero);</span>
+<span class="nc" id="L114">                    break;</span>
+                default:
+<span class="nc" id="L116">                    System.err.println(&quot;ERRO! Opção inválida.&quot;);</span>
+<span class="nc" id="L117">                    return; // Sai do método sem atualizar o banco</span>
+            }
+
+            // Se chegou aqui, o dado foi alterado na memória com sucesso. Vamos salvar no banco.
+<span class="nc" id="L121">            adapter.atualizar(alvo);</span>
+<span class="nc" id="L122">            System.out.println(&quot;Cliente atualizado com sucesso no sistema!&quot;);</span>
+
+<span class="nc" id="L124">        } catch (IllegalArgumentException e) {</span>
+            // Caso o setter dispare um erro (ex: CPF inválido, Salário negativo), capturamos aqui
+<span class="nc" id="L126">            System.err.println(&quot;ERRO! Falha ao atualizar: &quot; + e.getMessage());</span>
+<span class="nc" id="L127">        }</span>
+<span class="nc" id="L128">    }</span>
+    
+    // REMOVE
+    public void rotinaRemoverCliente(Scanner sc) {
+<span class="nc" id="L132">        Cliente alvo = selecionarClienteParaAcao(sc);</span>
+
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (alvo == null) {</span>
+<span class="nc" id="L135">            System.out.println(&quot;Nenhum cliente selecionado. Operação cancelada.&quot;);</span>
+<span class="nc" id="L136">            return;</span>
+        }
+
+<span class="nc" id="L139">        view.exibirCliente(alvo);</span>
+<span class="nc" id="L140">        view.pedirConfirmacao(sc); // TODO: testar isso</span>
+<span class="nc" id="L141">        adapter.remover(alvo);</span>
+<span class="nc" id="L142">        System.out.println(&quot;Cliente removido com sucesso!&quot;);</span>
+<span class="nc" id="L143">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
